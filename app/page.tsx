@@ -1,5 +1,6 @@
 import { trpc } from "@/trpc/server";
 import { ClientGreeting } from "./client-greeting";
+import AuthTest from "./authTest";
 
 
 export default function Home() {
@@ -16,6 +17,8 @@ export default function Home() {
         </p>
 
         <ClientGreeting />
+        <AuthTest />
+
 
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
