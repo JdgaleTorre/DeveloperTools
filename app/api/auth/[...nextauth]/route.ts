@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { db } from "@/app/schema";
 // You can add more providers (Google, Credentials, etc.)
 
 const handler = NextAuth({
+  adapter: DrizzleAdapter(db),
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,

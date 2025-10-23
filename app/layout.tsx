@@ -27,16 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ isolation: "isolate" }}>
-        <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <TRPCProvider>
-            <HydrateClient>
-              <AuthProvider>
-                {children}
-              </AuthProvider>
-            </HydrateClient>
-          </TRPCProvider>
-        </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning={true}>
+        <TRPCProvider>
+          <HydrateClient>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </HydrateClient>
+        </TRPCProvider>
       </body>
     </html>
   );
