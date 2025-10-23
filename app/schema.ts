@@ -1,10 +1,10 @@
 import {
   boolean,
   timestamp,
-  pgTable,
   text,
   primaryKey,
   integer,
+  pgTableCreator,
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
@@ -14,6 +14,8 @@ const connectionString = process.env.AUTH_DRIZZLE_URL!;
 const pool = postgres(connectionString, { max: 1 })
  
 export const db = drizzle(pool)
+
+const pgTable = pgTableCreator((name) => `devtools_${name}`);
  
 export const users = pgTable("user", {
   id: text("id")
