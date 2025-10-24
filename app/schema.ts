@@ -5,18 +5,23 @@ import {
   primaryKey,
   integer,
   pgTableCreator,
+  jsonb,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccountType } from "@auth/core/adapters"
- 
+import { relations } from "drizzle-orm";
+
 const connectionString = process.env.AUTH_DRIZZLE_URL!;
 const pool = postgres(connectionString, { max: 1 })
- 
+
 export const db = drizzle(pool)
 
 const pgTable = pgTableCreator((name) => `devtools_${name}`);
- 
+
+// NEXTAUTH TABLES 
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -26,7 +31,7 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
- 
+
 export const accounts = pgTable(
   "account",
   {
@@ -52,7 +57,7 @@ export const accounts = pgTable(
     },
   ]
 )
- 
+
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
@@ -60,7 +65,7 @@ export const sessions = pgTable("session", {
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 })
- 
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -76,7 +81,7 @@ export const verificationTokens = pgTable(
     },
   ]
 )
- 
+
 export const authenticators = pgTable(
   "authenticator",
   {
@@ -99,3 +104,106 @@ export const authenticators = pgTable(
     },
   ]
 )
+
+// Board Tables
+// BOARDS TABLE
+export const boards = pgTable("boards", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// TASKS TABLE
+export const tasks = pgTable("tasks", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  boardId: uuid("board_id")
+    .notNull()
+    .references(() => boards.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  position: integer("position").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// CUSTOM FIELD DEFINITIONS PER BOARD
+export const customFields = pgTable("custom_fields", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  boardId: uuid("board_id")
+    .notNull()
+    .references(() => boards.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 100 }).notNull(), // e.g. "Priority", "Due Date"
+  type: varchar("type", { length: 50 }).notNull(), // e.g. "text", "number", "date", "select"
+  options: jsonb("options"), // for "select" or "multiselect" field types
+  required: integer("required").default(0), // 0 = false, 1 = true
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// VALUES OF CUSTOM FIELDS PER TASK
+export const taskCustomFieldValues = pgTable(
+  "task_custom_field_values",
+  {
+    taskId: uuid("task_id")
+      .notNull()
+      .references(() => tasks.id, { onDelete: "cascade" }),
+    fieldId: uuid("field_id")
+      .notNull()
+      .references(() => customFields.id, { onDelete: "cascade" }),
+    value: jsonb("value").notNull(), // flexible: could be text, number, array, etc.
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.taskId, table.fieldId] }),
+  })
+);
+
+//
+// RELATIONS (optional, for Drizzle’s relational API)
+//
+export const usersRelations = relations(users, ({ many }) => ({
+  boards: many(boards),
+}));
+
+export const boardsRelations = relations(boards, ({ many, one }) => ({
+  owner: one(users, {
+    fields: [boards.ownerId],
+    references: [users.id],
+  }),
+  tasks: many(tasks),
+  customFields: many(customFields),
+}));
+
+export const tasksRelations = relations(tasks, ({ many, one }) => ({
+  board: one(boards, {
+    fields: [tasks.boardId],
+    references: [boards.id],
+  }),
+  customFieldValues: many(taskCustomFieldValues),
+}));
+
+export const customFieldsRelations = relations(customFields, ({ one, many }) => ({
+  board: one(boards, {
+    fields: [customFields.boardId],
+    references: [boards.id],
+  }),
+  values: many(taskCustomFieldValues),
+}));
+
+export const taskCustomFieldValuesRelations = relations(taskCustomFieldValues, ({ one }) => ({
+  task: one(tasks, {
+    fields: [taskCustomFieldValues.taskId],
+    references: [tasks.id],
+  }),
+  field: one(customFields, {
+    fields: [taskCustomFieldValues.fieldId],
+    references: [customFields.id],
+  }),
+}));
+
+
+
+
+
+
