@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { TRPCProvider } from "@/trpc/client";
-import { HydrateClient } from "@/trpc/server";
-import { AuthProvider } from "./provider";
+import "@/public/globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,13 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning={true}>
-        <TRPCProvider>
-          <HydrateClient>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
-          </HydrateClient>
-        </TRPCProvider>
+
+        {children}
+
       </body>
     </html>
   );
