@@ -36,4 +36,4 @@ const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
 
 CustomButton.displayName = "CustomButton"
 
-export { CustomButton }
+export default CustomButton 

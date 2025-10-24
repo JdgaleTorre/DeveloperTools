@@ -127,6 +127,21 @@ export const tasks = pgTable("tasks", {
   description: text("description"),
   position: integer("position").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  // Link to custom status
+  statusId: uuid("status_id")
+    .notNull()
+    .references(() => taskStatuses.id, { onDelete: "set null" }),
+});
+
+export const taskStatuses = pgTable("task_statuses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  boardId: uuid("board_id")
+    .notNull()
+    .references(() => boards.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 100 }).notNull(), // e.g. "To Do", "In Progress", "Done"
+  color: varchar("color", { length: 20 }), // optional, for UI labels (e.g. "blue", "#22c55e")
+  position: integer("position").default(0).notNull(), // order in the board
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // CUSTOM FIELD DEFINITIONS PER BOARD
@@ -180,6 +195,10 @@ export const tasksRelations = relations(tasks, ({ many, one }) => ({
     fields: [tasks.boardId],
     references: [boards.id],
   }),
+  status: one(taskStatuses, {
+    fields: [tasks.statusId],
+    references: [taskStatuses.id],
+  }),
   customFieldValues: many(taskCustomFieldValues),
 }));
 
@@ -202,6 +221,13 @@ export const taskCustomFieldValuesRelations = relations(taskCustomFieldValues, (
   }),
 }));
 
+export const taskStatusesRelations = relations(taskStatuses, ({ one, many }) => ({
+  board: one(boards, {
+    fields: [taskStatuses.boardId],
+    references: [boards.id],
+  }),
+  tasks: many(tasks),
+}));
 
 
 

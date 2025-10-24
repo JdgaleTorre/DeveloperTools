@@ -18,4 +18,5 @@
   --color-background-dark: oklch(0.18 0.01 250); /* gray-900 */
   --color-surface-dark: oklch(0.22 0.01 250); /* gray-800 */
   --color-text-dark: oklch(0.97 0.01 260); /* gray-50 */
+  --color-muted-foreground: oklch(0.7 0.01 260); /* gray-400 */
 }
