@@ -11,13 +11,18 @@ export interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
     ({ className, variant = "default", inputSize = "md", error = false, label, ...props }, ref) => {
         return (
-            <div className="flex flex-col">
+
+            <div className={cn(
+                // Base styles
+                "w-full",
+                className,
+            )}>
                 {label && <label className="text-sm font-medium text-foreground">{label}</label>}
                 <input
                     ref={ref}
                     className={cn(
                         // Base styles
-                        "w-full rounded-md font-medium transition-colors dark:text-black ",
+                        "w-full rounded-md font-medium transition-colors dark:text-black",
                         "focus:outline-none focus:ring-2 focus:ring-offset-2 ",
                         "disabled:cursor-not-allowed disabled:opacity-50",
 
@@ -48,6 +53,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
 
                         className,
                     )}
+
                     {...props}
                 />
             </div>

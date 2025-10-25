@@ -169,9 +169,13 @@ export const taskCustomFieldValues = pgTable(
       .references(() => customFields.id, { onDelete: "cascade" }),
     value: jsonb("value").notNull(), // flexible: could be text, number, array, etc.
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.taskId, table.fieldId] }),
-  })
+  (table) => [
+    {
+      pk: primaryKey({
+        columns: [table.taskId, table.fieldId],
+      }),
+    },
+  ]
 );
 
 //
