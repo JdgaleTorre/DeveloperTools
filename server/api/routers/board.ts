@@ -55,12 +55,36 @@ export const BoardRouter = createTRPCRouter({
         )
         .query(async ({ ctx, input }) => {
             const { db, session } = ctx;
-            const board = await db
-                .select()
+            const rows = await db
+                .select({
+                    boardId: boards.id,
+                    boardName: boards.name,
+                    boardDescription: boards.description,
+                    statusId: taskStatuses.id,
+                    statusName: taskStatuses.name,
+                    statusColor: taskStatuses.color,
+                    statusPosition: taskStatuses.position,
+                })
                 .from(boards)
-                .where(and(eq(boards.id, input.id), eq(boards.ownerId, session.user.id)))
-                .limit(1);
-            return board[0] ?? null;
+                .leftJoin(taskStatuses, eq(taskStatuses.boardId, boards.id))
+                .where(and(eq(boards.id, input.id), eq(boards.ownerId, session.user.id)));
+
+            const board = rows.length
+                ? {
+                    id: rows[0].boardId,
+                    name: rows[0].boardName,
+                    description: rows[0].boardDescription,
+                    ownerId: session.user.id,
+                    taskStatuses: rows.map((r) => ({
+                        id: r.statusId,
+                        name: r.statusName,
+                        color: r.statusColor,
+                        position: r.statusPosition,
+                        boardId: input.id,
+                    })),
+                }
+                : null;
+            return board;
         }),
     getUserBoards: protectedProcedure
         .query(async ({ ctx }) => {
@@ -71,7 +95,7 @@ export const BoardRouter = createTRPCRouter({
                 .where(eq(boards.ownerId, session.user.id));
             return userBoards;
         }),
-    deleteBoardId:  protectedProcedure
+    deleteBoardId: protectedProcedure
         .input(
             z.object({
                 id: z.string(),
