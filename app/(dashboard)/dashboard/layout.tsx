@@ -4,6 +4,7 @@ import "@/public/globals.css";
 import { TRPCProvider } from "@/trpc/client";
 import { HydrateClient } from "@/trpc/server";
 import { AuthProvider } from "@/lib/provider";
+import { ToastProvider } from "@/components/ui/toast";
 
 
 const geistSans = Geist({
@@ -29,22 +30,24 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark:text-text-dark`} suppressHydrationWarning={true}>
-                <TRPCProvider>
-                    <HydrateClient>
-                        <AuthProvider>
-                            <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+                <ToastProvider>
+                    <TRPCProvider>
+                        <HydrateClient>
+                            <AuthProvider>
+                                <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
 
-                                {children}
+                                    {children}
 
 
-                                <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-                                    <span className="text-sm text-gray-500">© 2025 Jose Gale</span>
-                                </footer>
-                            </div>
+                                    <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+                                        <span className="text-sm text-gray-500">© 2025 Jose Gale</span>
+                                    </footer>
+                                </div>
 
-                        </AuthProvider>
-                    </HydrateClient>
-                </TRPCProvider>
+                            </AuthProvider>
+                        </HydrateClient>
+                    </TRPCProvider>
+                </ToastProvider>
             </body>
         </html>
     );

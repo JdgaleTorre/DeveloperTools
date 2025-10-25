@@ -4,14 +4,37 @@ import CustomButton from "@/components/ui/button";
 import CustomInput from "@/components/ui/input";
 import { trpc } from "@/trpc/client";
 import { useState } from "react";
+import { useToast } from "@/components/ui/toast"
+import { useRouter } from "next/navigation";
 
 export default function CreateBoard() {
+    const { addToast } = useToast();
+    const router = useRouter();
     const [state, setState] = useState<{
         description: string;
         name: string;
     }>({
         description: '',
         name: '',
+    });
+
+
+    const { mutate } = trpc.board.insert.useMutation({
+        onSuccess: async (data) => {
+            addToast({
+                title: "Success",
+                description: "Board created successfully",
+                variant: "success",
+            });
+            router.push(`/dashboard/boards/${data[0].id}`);
+        },
+        onError: (error) => {
+            addToast({
+                title: "Error",
+                description: "Failed to create board",
+                variant: "error",
+            });
+        },
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -29,7 +52,6 @@ export default function CreateBoard() {
         });
     }
 
-    const { data } = trpc.hello.useQuery({ text: 'from tRPC' });
 
     return (
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -45,6 +67,7 @@ export default function CreateBoard() {
                     name="name"
                     onChange={handleChange}
                     label="Board Name"
+                    value={state.name}
                 />
 
                 {/* Description (full width) */}
@@ -55,13 +78,14 @@ export default function CreateBoard() {
                     onChange={handleChange}
                     name="description"
                     label="Description"
+                    value={state.description}
                 />
 
 
                 <CustomButton
                     variant="primary"
                     onClick={() => {
-                        console.log(state);
+                        mutate({ name: state.name, description: state.description });
                     }}
                 >
                     Create Board
@@ -71,9 +95,7 @@ export default function CreateBoard() {
                 </CustomButton>
             </div>
 
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-                {data ? <p>{data.greeting}</p> : <p>Loading...</p>}
-            </div>
+
         </main>
     );
 }

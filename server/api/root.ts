@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { createCallerFactory, createTRPCRouter, publicProcedure } from './trpc';
+import { BoardRouter } from './routers/board';
 
 export const appRouter = createTRPCRouter({
+    board: BoardRouter,
     hello: publicProcedure
         .input(
             z.object({
