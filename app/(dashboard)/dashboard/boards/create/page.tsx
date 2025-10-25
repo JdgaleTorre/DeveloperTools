@@ -26,7 +26,7 @@ export default function CreateBoard() {
                 description: "Board created successfully",
                 variant: "success",
             });
-            router.push(`/dashboard/boards/${data[0].id}`);
+            router.push(`/dashboard/boards/${data.id}`);
         },
         onError: (error) => {
             addToast({

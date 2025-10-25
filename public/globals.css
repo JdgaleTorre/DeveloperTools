@@ -12,11 +12,13 @@
   --color-background: oklch(0.98 0.01 250); /* gray-50 */
   --color-surface: oklch(1 0 0); /* white */
   --color-text: oklch(0.12 0.01 260); /* gray-900 */
-  --color_primary-foreground: oklch(0.98 0.01 260); /* white */
+  --color-primary-foreground: oklch(0.98 0.01 260); /* white */
+  --color-destructive: oklch(0.6 0.2 25); /* red-600 */
 
   /* Dark mode */
   --color-background-dark: oklch(0.18 0.01 250); /* gray-900 */
   --color-surface-dark: oklch(0.22 0.01 250); /* gray-800 */
   --color-text-dark: oklch(0.97 0.01 260); /* gray-50 */
   --color-muted-foreground: oklch(0.7 0.01 260); /* gray-400 */
+  --color-destructive-dark: oklch(0.6 0.2 25); /* red-600 */
 }
