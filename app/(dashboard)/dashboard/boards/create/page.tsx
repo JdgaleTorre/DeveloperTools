@@ -19,7 +19,7 @@ export default function CreateBoard() {
     });
 
 
-    const { mutate } = trpc.board.insert.useMutation({
+    const { mutate, isPending } = trpc.board.insert.useMutation({
         onSuccess: async (data) => {
             addToast({
                 title: "Success",
@@ -87,10 +87,11 @@ export default function CreateBoard() {
                     onClick={() => {
                         mutate({ name: state.name, description: state.description });
                     }}
+                    disabled={isPending}
                 >
                     Create Board
                 </CustomButton>
-                <CustomButton variant="secondary" onClick={clearCustomField}>
+                <CustomButton variant="secondary" onClick={clearCustomField} disabled={isPending}>
                     Clear
                 </CustomButton>
             </div>
