@@ -17,6 +17,9 @@ export default function TaskCard({ status, task }: { status: InferInsertModel<ty
         onSuccess: async () => {
             addToast({ title: "Task deleted", description: "The task has been deleted successfully.", variant: "success" });
             await utils.tasks.getBoardTasks.invalidate({ boardId: task.boardId! });
+        },
+        onError: (error) => {
+            addToast({ title: "Error deleting task", description: error.message, variant: "error" });
         }
     });
 
