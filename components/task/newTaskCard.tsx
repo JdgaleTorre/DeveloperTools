@@ -12,9 +12,11 @@ export default function NewTaskCard({ status, board, cancelFn }: { status: Infer
     const [task, setTask] = useState({ title: "", description: "" });
     const utils = trpc.useUtils();
     const { mutate } = trpc.tasks.insert.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             setTask({ title: "", description: "" });
-            utils.tasks.getBoardTasks.invalidate();
+            // utils.board.getById.invalidate({ id: board.id! });
+            await utils.tasks.getBoardTasks.invalidate({ boardId: board.id! });
+            cancelFn();
         }
     });
 

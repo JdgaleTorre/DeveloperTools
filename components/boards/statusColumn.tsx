@@ -4,6 +4,7 @@ import TaskCard from "../task/taskCard";
 import { boards, tasks, taskStatuses } from "@/app/schema";
 import { useState } from "react";
 import NewTaskCard from "../task/newTaskCard";
+import CustomButton from "../ui/button";
 
 export default function StatusColumn({ status, tasksList, statusLength }: { status: InferInsertModel<typeof taskStatuses>, tasksList: InferInsertModel<typeof tasks>[], statusLength: number }) {
     const [insertState, setInsertState] = useState(false);
@@ -16,9 +17,7 @@ export default function StatusColumn({ status, tasksList, statusLength }: { stat
             {insertState ? (
                 <NewTaskCard status={status} board={{ id: status.boardId } as InferInsertModel<typeof boards>} cancelFn={() => setInsertState(false)} />
             ) : (
-                <button onClick={() => setInsertState(true)} className="mt-2 text-blue-500">
-                    + Add New Task
-                </button>
+                <CustomButton className="w-full" variant="ghost" size="sm" onClick={() => setInsertState(true)}>+ Add New Task</CustomButton>
             )}
         </div>
     )

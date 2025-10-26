@@ -8,6 +8,7 @@ import { db } from "@/server/db";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { accounts, sessions, users, verificationTokens } from "@/app/schema";
 import GitHubProvider from "next-auth/providers/github";
+import { eq, and } from "drizzle-orm";
 
 
 
@@ -36,6 +37,49 @@ export const authOptions: NextAuthOptions = {
                 id: user.id,
             },
         }),
+        async signIn({ user, account }) {
+            if (!user?.email || !account) return true;
+
+            // Check for existing user by email
+            const existingUsers = await db
+                .select()
+                .from(users)
+                .where(eq(users.email, user.email));
+
+            const existingUser = existingUsers[0];
+
+            if (existingUser) {
+                // Check if this provider is already linked
+                const linkedAccounts = await db
+                    .select()
+                    .from(accounts)
+                    .where(
+                        and(
+                            eq(accounts.userId, existingUser.id),
+                            eq(accounts.provider, account.provider)
+                        )
+                    );
+
+                if (linkedAccounts.length === 0) {
+                    // Link this new provider to existing user
+                    await db.insert(accounts).values({
+                        user_id: existingUser.id,
+                        type: account.type as any,
+                        provider: account.provider!,
+                        provider_account_id: account.providerAccountId!,
+                        access_token: account.access_token ?? null,
+                        token_type: account.token_type ?? null,
+                        scope: account.scope ?? null,
+                        id_token: account.id_token ?? null,
+                        refresh_token: account.refresh_token ?? null,
+                        expires_at: account.expires_at ?? null,
+                        session_state: account.session_state ?? null,
+                    } as any);
+                }
+            }
+
+            return true;
+        },
     },
     adapter: DrizzleAdapter(db
         , {
@@ -53,9 +97,9 @@ export const authOptions: NextAuthOptions = {
     ],
     // Optional config
     secret: process.env.NEXTAUTH_SECRET,
-    //   pages: {
-    //     signIn: "/auth/signin", // optional custom sign-in page
-    //   },
+      pages: {
+        signIn: "/dashboard", // optional custom sign-in page
+      },
 }
 
 export const getServerAuthSession = () => getServerSession(authOptions);
