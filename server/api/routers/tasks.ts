@@ -38,4 +38,15 @@ export const TasksRouter = createTRPCRouter({
             });
             return task;
         }),
+    delete: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+            }),
+        )
+        .mutation(async ({ ctx, input }) => {
+            const { db, session } = ctx;
+            if (!session.user) throw new Error("Not authenticated");
+            await db.delete(tasks).where(eq(tasks.id, input.id));
+        }),
 });
