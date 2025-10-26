@@ -11,7 +11,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
             <h1 className="text-2xl font-bold text-left">Board {board?.name}</h1>
             <p className="mt-2 text-left">Description: {board?.description}</p>
 
-            <div className="mt-6 w-full flex gap-4">
+            <div className="mt-6 w-full flex gap-4 items-start">
                 {board?.taskStatuses.map((status) => (
                     <StatusColumn
                         key={status.id}

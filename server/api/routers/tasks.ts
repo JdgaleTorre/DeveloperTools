@@ -46,7 +46,25 @@ export const TasksRouter = createTRPCRouter({
         )
         .mutation(async ({ ctx, input }) => {
             const { db, session } = ctx;
-            if (!session.user) throw new Error("Not authenticated");
+
             await db.delete(tasks).where(eq(tasks.id, input.id));
+        }),
+    update: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                title: z.string(),
+                description: z.string().optional(),
+                statusId: z.string(),
+            }),
+        )
+        .mutation(async ({ ctx, input }) => {
+            const { db, session } = ctx;
+            const [task] = await db.update(tasks).set({
+                title: input.title,
+                description: input.description,
+                statusId: input.statusId,
+            }).where(eq(tasks.id, input.id));
+            return task;
         }),
 });

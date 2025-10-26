@@ -9,7 +9,7 @@ import CustomButton from "../ui/button";
 export default function StatusColumn({ status, tasksList, statusLength }: { status: InferInsertModel<typeof taskStatuses>, tasksList: InferInsertModel<typeof tasks>[], statusLength: number }) {
     const [insertState, setInsertState] = useState(false);
     return (
-        <div key={status.id} className={`border border-gray-300 rounded-lg p-4 flex-shrink-0`}
+        <div key={status.id} className={`border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto`}
             style={{ width: `${100 / statusLength}%` }}>
             <h2 className="text-lg font-semibold">{status.name}</h2>
             {tasksList.map((task) => (
