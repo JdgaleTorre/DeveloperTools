@@ -75,7 +75,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
             {insertState ? (
                 <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
             ) : (
-                <CustomButton className="w-full z-50" variant="ghost" size="sm" onClick={(e) => {
+                <CustomButton className="w-full relative z-50" variant="ghost" size="sm" onClick={(e) => {
                     console.log('Here')
                     e.preventDefault()
                     setInsertState(true)
