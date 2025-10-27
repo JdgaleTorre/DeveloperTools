@@ -1,12 +1,12 @@
 'use client'
-import { InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import TaskCard from "../task/taskCard";
 import { boards, tasks, taskStatuses } from "@/app/schema";
 import { useState } from "react";
 import NewTaskCard from "../task/newTaskCard";
 import CustomButton from "../ui/button";
 
-export default function StatusColumn({ status, tasksList, statusLength }: { status: InferInsertModel<typeof taskStatuses>, tasksList: InferInsertModel<typeof tasks>[], statusLength: number }) {
+export default function StatusColumn({ status, tasksList, statusLength }: { status: InferSelectModel<typeof taskStatuses>, tasksList: InferSelectModel<typeof tasks>[], statusLength: number }) {
     const [insertState, setInsertState] = useState(false);
     return (
         <div key={status.id} className={`border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto`}
@@ -16,7 +16,7 @@ export default function StatusColumn({ status, tasksList, statusLength }: { stat
                 <TaskCard key={task.id} status={status} task={task} />
             ))}
             {insertState ? (
-                <NewTaskCard status={status} board={{ id: status.boardId } as InferInsertModel<typeof boards>} cancelFn={() => setInsertState(false)} />
+                <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
             ) : (
                 <CustomButton className="w-full" variant="ghost" size="sm" onClick={() => setInsertState(true)}>+ Add New Task</CustomButton>
             )}

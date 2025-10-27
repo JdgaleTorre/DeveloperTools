@@ -1,5 +1,4 @@
 "use client";
-'use client';
 import StatusColumn from "@/components/boards/statusColumn";
 import { trpc } from "@/trpc/client";
 
@@ -15,7 +14,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                 {board?.taskStatuses.map((status) => (
                     <StatusColumn
                         key={status.id}
-                        status={{ ...status, boardId: board.id, name: status.name ?? "", color: status.color ?? "", id: status.id ?? "", position: status.position ?? 0 }}
+                        status={status}
                         tasksList={tasks?.filter((task) => task.statusId === status.id).length ? tasks.filter((task) => task.statusId === status.id) : []}
                         statusLength={board.taskStatuses.length}
                     />

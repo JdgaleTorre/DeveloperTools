@@ -1,6 +1,6 @@
 "use client";
 import { getContrastColor } from "@/lib/utils";
-import { InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import { tasks, taskStatuses } from "@/app/schema";
 import CustomButton from "../ui/button";
 import { Trash2, Pencil, UtensilsIcon } from 'lucide-react';
@@ -9,7 +9,7 @@ import { useToast } from "../ui/toast";
 
 
 
-export default function TaskCard({ status, task }: { status: InferInsertModel<typeof taskStatuses>, task: InferInsertModel<typeof tasks> }) {
+export default function TaskCard({ status, task }: { status: InferSelectModel<typeof taskStatuses>, task: InferSelectModel<typeof tasks> }) {
     const { addToast } = useToast();
     const utils = trpc.useUtils();
 

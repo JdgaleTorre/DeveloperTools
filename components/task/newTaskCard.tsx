@@ -2,13 +2,13 @@
 import { getContrastColor } from "@/lib/utils";
 import CustomButton from "../ui/button";
 import CustomInput from "../ui/input";
-import { InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import { boards, taskStatuses } from "@/app/schema";
 import { useState } from "react";
 import { trpc } from "@/trpc/client";
 
 
-export default function NewTaskCard({ status, board, cancelFn }: { status: InferInsertModel<typeof taskStatuses>, board: InferInsertModel<typeof boards>, cancelFn: () => void }) {
+export default function NewTaskCard({ status, board, cancelFn }: { status: InferSelectModel<typeof taskStatuses>, board: InferSelectModel<typeof boards>, cancelFn: () => void }) {
     const [task, setTask] = useState({ title: "", description: "" });
     const utils = trpc.useUtils();
     const { mutate } = trpc.tasks.insert.useMutation({

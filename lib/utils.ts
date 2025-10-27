@@ -1,4 +1,6 @@
+import { taskStatuses } from "@/app/schema";
 import { ClassValue, clsx } from "clsx"
+import { InferInsertModel } from "drizzle-orm";
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -23,3 +25,25 @@ export function getContrastColor(hexColor: string) {
 
   return luminance > 186 ? "#000000" : "#ffffff"; // dark text for light bg, white text for dark bg
 }
+
+// Create default statuses for that board
+export const defaultStatuses: Array<InferInsertModel<typeof taskStatuses>> = [
+  {
+    name: "To Do",
+    boardId: '',
+    color: "#3B82F6", // blue-500
+    position: 1,
+  },
+  {
+    name: "In Progress",
+    boardId: '',
+    color: "#F59E0B", // amber-500
+    position: 2,
+  },
+  {
+    name: "Done",
+    boardId: '',
+    color: "#10B981", // emerald-500
+    position: 3,
+  },
+];
