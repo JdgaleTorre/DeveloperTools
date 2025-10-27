@@ -43,7 +43,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
     };
 
     const variants = cva(
-        "border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark",
+        "border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0",
         {
             variants: {
                 dragging: {
@@ -75,7 +75,11 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
             {insertState ? (
                 <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
             ) : (
-                <CustomButton className="w-full" variant="ghost" size="sm" onClick={() => setInsertState(true)}>+ Add New Task</CustomButton>
+                <CustomButton className="w-full z-50" variant="ghost" size="sm" onClick={(e) => {
+                    console.log('Here')
+                    e.preventDefault()
+                    setInsertState(true)
+                }}>+ Add New Task</CustomButton>
             )}
         </div>
     )
