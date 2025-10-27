@@ -1,6 +1,6 @@
-import { taskStatuses } from "@/app/schema";
+import { tasks, taskStatuses } from "@/app/schema";
 import { ClassValue, clsx } from "clsx"
-import { InferInsertModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -47,3 +47,9 @@ export const defaultStatuses: Array<InferInsertModel<typeof taskStatuses>> = [
     position: 3,
   },
 ];
+
+export interface DraggableData {
+  type: "Status" | "Task",
+  status: InferSelectModel<typeof taskStatuses> | null,
+  task: InferSelectModel<typeof tasks> | null,
+}
