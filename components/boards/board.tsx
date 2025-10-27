@@ -14,6 +14,7 @@ import {
     DragStartEvent,
     DragEndEvent,
     DragOverEvent,
+    DragOverlay,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import {
@@ -23,6 +24,8 @@ import {
 } from "@/lib/dnd_helpers";
 import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
+import { createPortal } from "react-dom";
+import TaskCard from "../task/taskCard";
 
 export default function BoardComponent({ boardId }: { boardId: string }) {
     const utils = trpc.useUtils();
@@ -222,6 +225,23 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                         ))}
                     </SortableContext>
                 </DndContext>
+                {"document" in window &&
+                    createPortal(
+                        <DragOverlay>
+                            {activeStatus && (
+                                <StatusColumn
+                                    isOverlay
+                                    status={activeStatus}
+                                    tasksList={tasks.filter(
+                                        (task) => task.statusId === activeStatus.id
+                                    )}
+                                    statusLength={board.taskStatuses.length}
+                                />
+                            )}
+                            {activeTask && <TaskCard status={activeStatus ?? []} task={activeTask} isOverlay />}
+                        </DragOverlay>,
+                        document.body
+                    )}
             </div>
         </div>
     );

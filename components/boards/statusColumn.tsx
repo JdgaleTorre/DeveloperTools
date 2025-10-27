@@ -9,6 +9,7 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { DraggableData } from "@/lib/utils";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority"
+import { Move } from "lucide-react";
 
 interface StatusColumnProps {
     status: InferSelectModel<typeof taskStatuses>,
@@ -60,13 +61,20 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         <div key={status.id}
             style={{ width: `${100 / statusLength}%`, ...style }}
             ref={setNodeRef}
-            {...attributes}
-            {...listeners}
+
             className={variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
             })}
         >
-            <h2 className="text-lg font-semibold">{status.name}</h2>
+            <div className="flex justify-between">
+                <CustomButton variant="ghost" size="sm"
+                    {...attributes}
+                    {...listeners}>
+                    <Move />
+                </CustomButton>
+
+                <h2 className="text-lg font-semibold">{status.name}</h2>
+            </div>
             <SortableContext items={tasksList.map((task) => task.id)}>
                 {tasksList.map((task) => (
                     <TaskCard key={task.id} status={status} task={task} />
