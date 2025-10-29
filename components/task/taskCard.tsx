@@ -65,7 +65,9 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
     });
 
     return (
-        <div className={`my-2 p-2 rounded shadow flex flex-row items-center cursor-pointer transform hover:scale-105 duration-100 z-10`}
+        <div className={`my-2 p-2 rounded shadow flex flex-row items-center cursor-pointer transform hover:scale-105 duration-100 z-10 ${variants({
+            dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+        })}`}
             ref={setNodeRef}
             {...listeners}
             {...attributes}

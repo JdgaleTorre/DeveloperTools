@@ -44,36 +44,32 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
     };
 
     const variants = cva(
-        "border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0",
-        {
-            variants: {
-                dragging: {
-                    default: "border-2 border-transparent",
-                    over: "ring-2 opacity-30",
-                    overlay: "ring-2 ring-primary",
-                },
+        "", {
+        variants: {
+            dragging: {
+                default: "border-2 border-transparent",
+                over: "ring-2 opacity-30",
+                overlay: "ring-2 ring-primary",
             },
-        }
+        },
+    }
     );
 
-
+    //{ width: `${100 / statusLength}%`, ...style }
     return (
         <div key={status.id}
-            style={{ width: `${100 / statusLength}%`, ...style }}
+            style={style}
             ref={setNodeRef}
-
-            className={variants({
+            className={`min-w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0 ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-            })}
+            })}`}
         >
-            <div className="flex justify-between">
-                <CustomButton variant="ghost" size="sm"
-                    {...attributes}
-                    {...listeners}>
-                    <Move />
-                </CustomButton>
-
-                <h2 className="text-lg font-semibold">{status.name}</h2>
+            <div className="flex justify-between cursor-pointer"
+                {...attributes}
+                {...listeners}
+            >
+                <h2 className="text-lg font-semibold flex-grow ">{status.name}</h2>
+                <Move />
             </div>
             <SortableContext items={tasksList.map((task) => task.id)}>
                 {tasksList.map((task) => (

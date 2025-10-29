@@ -24,8 +24,8 @@ import {
 } from "@/lib/dnd_helpers";
 import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
-import { createPortal } from "react-dom";
 import TaskCard from "../task/taskCard";
+
 
 export default function BoardComponent({ boardId }: { boardId: string }) {
     const utils = trpc.useUtils();
@@ -224,24 +224,26 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                             />
                         ))}
                     </SortableContext>
+                    <DragOverlay>
+                        {activeTask ? <TaskCard isOverlay status={board?.taskStatuses.find((status) => status.id === activeTask.statusId) ?? {
+                            boardId: "",
+                            name: "",
+                            id: "",
+                            createdAt: new Date(),
+                            color: "",
+                            position: 0,
+                        }} task={activeTask} /> : null}
+                        {activeStatus ? <StatusColumn
+                            isOverlay
+                            status={activeStatus}
+                            tasksList={
+                                tasks.filter((task) => task.statusId === activeStatus.id) ?? []
+                            }
+                            statusLength={board.taskStatuses.length}
+                        /> : null}
+
+                    </DragOverlay>
                 </DndContext>
-                {"document" in window &&
-                    createPortal(
-                        <DragOverlay>
-                            {activeStatus && (
-                                <StatusColumn
-                                    isOverlay
-                                    status={activeStatus}
-                                    tasksList={tasks.filter(
-                                        (task) => task.statusId === activeStatus.id
-                                    )}
-                                    statusLength={board.taskStatuses.length}
-                                />
-                            )}
-                            {activeTask && <TaskCard status={activeStatus ?? []} task={activeTask} isOverlay />}
-                        </DragOverlay>,
-                        document.body
-                    )}
             </div>
         </div>
     );
