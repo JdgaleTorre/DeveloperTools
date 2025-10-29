@@ -27,6 +27,7 @@ import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
 
 
+
 export default function BoardComponent({ boardId }: { boardId: string }) {
     const utils = trpc.useUtils();
 
@@ -35,7 +36,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
     const { data: initialTasks } = trpc.tasks.getBoardTasks.useQuery({ boardId });
 
     // ✅ Mutation for task updates
-    const { mutate: updateTask } = trpc.tasks.update.useMutation({
+    const { mutate: updateTask } = trpc.tasks.updateMany.useMutation({
         onSuccess: async () => {
             await utils.tasks.getBoardTasks.invalidate({ boardId });
         },
@@ -51,10 +52,11 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
     // ✅ Initialize once when data loads
     useEffect(() => {
         // Only update local state when we *first* receive tasks or when task count changes
-        if (initialTasks && initialTasks.length !== tasks.length) {
+        if (initialTasks) {
+            console.log('New Initials', initialTasks)
             setTasks(initialTasks);
         }
-    }, [initialTasks?.length]);
+    }, [initialTasks]);
 
     // ✅ Ref for tracking where the dragged task came from
     const pickedUpTaskColumn = useRef<string | null>(null);
@@ -161,40 +163,39 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
         const activeData = active.data.current;
         const overData = over.data.current;
 
-        // Only handle tasks
-        if (activeData?.type !== "Task") return;
+        if (activeData?.type === "Task") {
+            let newStatus = activeData.task?.statusId
 
-        const activeId = active.id as string;
-        const overId = over.id as string;
+            if (overData?.type == "Status") {
+                newStatus = overData.status?.id
 
-        const activeTask = tasks.find((t) => t.id === activeId);
-        if (!activeTask) return;
+            }
 
-        let newStatusId = activeTask.statusId;
+            const changedTasks: InferSelectModel<typeof tasksModel>[] = [];
 
-        if (overData?.type === "Task") {
-            newStatusId = overData.task.statusId;
-        } else if (overData?.type === "Status") {
-            newStatusId = overId;
-        }
+            tasks.forEach((task, i) => {
+                const original = initialTasks?.find((t) => t.id === task.id);
+                const newPosition = i + 1;
+                const positionChanged = task.position !== newPosition;
+                const statusChanged = task.statusId !== newStatus;
 
-        if (newStatusId !== activeTask.statusId) {
-            // ✅ Optimistic UI
-            setTasks((prev) =>
-                prev.map((t) =>
-                    t.id === activeTask.id ? { ...t, statusId: newStatusId } : t
-                )
-            );
-
-            // ✅ Update backend
-            updateTask({
-                id: activeTask.id,
-                title: activeTask.title,
-                description: activeTask.description ?? undefined,
-                statusId: newStatusId,
+                if (positionChanged || statusChanged) {
+                    changedTasks.push({ ...task, position: newPosition, statusId: newStatus ?? '' });
+                }
             });
+
+            if (changedTasks.length > 0) {
+                console.log("changedTasks ->", changedTasks);
+                updateTask(
+                    changedTasks.map((task) => ({
+                        ...task,
+                        description: task.description ?? "",
+                    }))
+                );
+            }
         }
     }
+
 
     // ─────────────────────────────
     // 🖥️ Render
