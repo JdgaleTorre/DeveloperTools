@@ -33,30 +33,70 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
 
     // ✅ Queries
     const { data: board } = trpc.board.getById.useQuery({ id: boardId });
-    const { data: initialTasks } = trpc.tasks.getBoardTasks.useQuery({ boardId });
+    const { data: tasks } = trpc.tasks.getBoardTasks.useQuery({ boardId });
+
+    const [rerenderKey, setRerenderKey] = useState(0);
 
     // ✅ Mutation for task updates
     const { mutate: updateTask } = trpc.tasks.updateMany.useMutation({
         onSuccess: async () => {
             await utils.tasks.getBoardTasks.invalidate({ boardId });
         },
+        onMutate: async (updatedTasks) => {
+            await utils.tasks.getBoardTasks.cancel({ boardId });
+
+            // Snapshot previous value
+            const previousTasks = utils.tasks.getBoardTasks.getData({ boardId });
+
+            // Optimistically update cache
+            utils.tasks.getBoardTasks.setData({ boardId }, (old) => {
+                if (!old) {
+                    // No existing cache — synthesize createdAt and normalize description for the optimistic items
+                    return updatedTasks.map((u) => ({
+                        ...u,
+                        description: u.description ?? null,
+                        createdAt: new Date(),
+                    }));
+                }
+                const updatedIds = updatedTasks.map((t) => t.id);
+                return old.map((t) =>
+                    updatedIds.includes(t.id)
+                        ? (() => {
+                            const found = updatedTasks.find((u) => u.id === t.id)!;
+                            // Preserve createdAt from the cached item and normalize description
+                            return {
+                                ...t,
+                                ...found,
+                                description: found.description ?? t.description ?? null,
+                                createdAt: t.createdAt,
+                            };
+                        })()
+                        : t
+                );
+            });
+
+            // Return rollback context
+            return { previousTasks };
+        },
+
+        // If the mutation fails, rollback
+        onError: (_err, _vars, context) => {
+            if (context?.previousTasks) {
+                utils.tasks.getBoardTasks.setData({ boardId }, context.previousTasks);
+            }
+        },
+
+        // After success, revalidate
+        onSettled: async () => {
+            await utils.tasks.getBoardTasks.invalidate({ boardId });
+        },
     });
 
-    // ✅ Local state for tasks (optimistic UI)
-    const [tasks, setTasks] = useState<InferSelectModel<typeof tasksModel>[]>([]);
     const [activeTask, setActiveTask] =
         useState<InferSelectModel<typeof tasksModel> | null>(null);
     const [activeStatus, setActiveStatus] =
         useState<InferSelectModel<typeof taskStatuses> | null>(null);
 
-    // ✅ Initialize once when data loads
-    useEffect(() => {
-        // Only update local state when we *first* receive tasks or when task count changes
-        if (initialTasks) {
-            console.log('New Initials', initialTasks)
-            setTasks(initialTasks);
-        }
-    }, [initialTasks]);
 
     // ✅ Ref for tracking where the dragged task came from
     const pickedUpTaskColumn = useRef<string | null>(null);
@@ -113,41 +153,64 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
         // Only handle tasks
         if (activeData?.type !== "Task") return;
 
-        const activeId = active.id;
-        const overId = over.id;
+        const activeId = active.id as string;
+        const overId = over.id as string;
 
-        // Moving task over another task
-        if (overData?.type === "Task") {
-            setTasks((prev) => {
-                const oldIndex = prev.findIndex((t) => t.id === activeId);
-                const newIndex = prev.findIndex((t) => t.id === overId);
-                if (oldIndex === -1 || newIndex === -1) return prev;
+        utils.tasks.getBoardTasks.setData({ boardId }, (old) => {
+            if (!old) return old;
+            const updated = [...old];
+            const activeIndex = updated.findIndex((t) => t.id === activeId);
+            if (activeIndex === -1) return old;
 
-                const updated = [...prev];
-                const activeTask = updated[oldIndex];
-                const overTask = updated[newIndex];
+            const activeTask = updated[activeIndex];
 
-                // If the column changes while dragging
+            // 🟢 Moving over another task
+            if (overData?.type === "Task") {
+                const overIndex = updated.findIndex((t) => t.id === overId);
+                if (overIndex === -1) return old;
+
+                const overTask = updated[overIndex];
+
+                // If moved to a different column
                 if (activeTask.statusId !== overTask.statusId) {
                     activeTask.statusId = overTask.statusId;
                 }
 
-                return arrayMove(updated, oldIndex, newIndex);
-            });
-        }
+                // Visually reorder
+                const reordered = arrayMove(updated, activeIndex, overIndex);
 
-        // Moving task over an empty column
-        if (overData?.type === "Status") {
-            setTasks((prev) => {
-                const oldIndex = prev.findIndex((t) => t.id === activeId);
-                if (oldIndex === -1) return prev;
+                // Normalize positions
+                board?.taskStatuses.forEach((status) => {
+                    const columnTasks = reordered
+                        .filter((t) => t.statusId === status.id)
+                        .sort((a, b) => a.position - b.position);
+                    columnTasks.forEach((t, i) => (t.position = i + 1));
+                });
 
-                const updated = [...prev];
-                updated[oldIndex].statusId = overId as string;
+                return reordered;
+            }
+
+            // 🟣 Moving over an empty column
+            if (overData?.type === "Status") {
+                activeTask.statusId = overData.status?.id ?? '';
+
+                // Recompute all positions
+                board?.taskStatuses.forEach((status) => {
+                    const columnTasks = updated
+                        .filter((t) => t.statusId === status.id)
+                        .sort((a, b) => a.position - b.position);
+                    columnTasks.forEach((t, i) => (t.position = i + 1));
+                });
+
+                setRerenderKey((prev) => prev + 1)
+
                 return updated;
-            });
-        }
+            }
+
+            return old;
+        });
     }
+
 
     // ─────────────────────────────
     // 🟥 DRAG END
@@ -155,46 +218,51 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
     // ─────────────────────────────
     function onDragEnd(event: DragEndEvent) {
         const { active, over } = event;
-        setActiveStatus(null);
-        setActiveTask(null);
-
         if (!over || !hasDraggableData(active) || !hasDraggableData(over)) return;
 
         const activeData = active.data.current;
         const overData = over.data.current;
 
-        if (activeData?.type === "Task") {
-            let newStatus = activeData.task?.statusId
+        if (activeData?.type !== "Task") return;
+        if (!tasks) return;
 
-            if (overData?.type == "Status") {
-                newStatus = overData.status?.id
+        // Clone tasks for manipulation
+        const newTasks = [...tasks];
+        const activeTask = newTasks.find((t) => t.id === active.id);
+        if (!activeTask) return;
 
-            }
+        // Example: drop into empty column
+        if (overData?.type === "Status") {
+            activeTask.statusId = overData.status?.id ?? '';
+            activeTask.position = 1;
+        }
 
-            const changedTasks: InferSelectModel<typeof tasksModel>[] = [];
-
-            tasks.forEach((task, i) => {
-                const original = initialTasks?.find((t) => t.id === task.id);
-                const newPosition = i + 1;
-                const positionChanged = task.position !== newPosition;
-                const statusChanged = task.statusId !== newStatus;
-
-                if (positionChanged || statusChanged) {
-                    changedTasks.push({ ...task, position: newPosition, statusId: newStatus ?? '' });
-                }
-            });
-
-            if (changedTasks.length > 0) {
-                console.log("changedTasks ->", changedTasks);
-                updateTask(
-                    changedTasks.map((task) => ({
-                        ...task,
-                        description: task.description ?? "",
-                    }))
-                );
+        // Example: drop over another task
+        else if (overData?.type === "Task") {
+            const overTask = newTasks.find((t) => t.id === over.id);
+            if (overTask) {
+                activeTask.statusId = overTask.statusId;
+                // reorder logic here...
             }
         }
+
+        // Normalize positions
+        board?.taskStatuses.forEach((status) => {
+            const columnTasks = newTasks
+                .filter((t) => t.statusId === status.id)
+                .sort((a, b) => a.position - b.position);
+            columnTasks.forEach((t, i) => (t.position = i + 1));
+        });
+
+        // 🚀 Optimistic update via tRPC
+        updateTask(
+            newTasks.map((t) => ({ ...t, description: t.description ?? "" }))
+        );
     }
+
+
+
+
 
 
     // ─────────────────────────────
@@ -216,10 +284,10 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                     <SortableContext items={board.taskStatuses.map((s) => s.id)}>
                         {board.taskStatuses.map((status) => (
                             <StatusColumn
-                                key={status.id}
+                                key={`${status.id}-${rerenderKey}`}
                                 status={status}
                                 tasksList={
-                                    tasks.filter((task) => task.statusId === status.id) ?? []
+                                    tasks?.filter((task) => task.statusId === status.id) ?? []
                                 }
                                 statusLength={board.taskStatuses.length}
                             />
@@ -238,7 +306,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                             isOverlay
                             status={activeStatus}
                             tasksList={
-                                tasks.filter((task) => task.statusId === activeStatus.id) ?? []
+                                tasks?.filter((task) => task.statusId === activeStatus.id) ?? []
                             }
                             statusLength={board.taskStatuses.length}
                         /> : null}
