@@ -1,7 +1,8 @@
 import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { boards, taskStatuses } from "@/app/schema";
-import { eq, and, InferInsertModel } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { defaultStatuses } from "@/lib/utils";
 
 export const BoardRouter = createTRPCRouter({
     insert: protectedProcedure
@@ -19,30 +20,11 @@ export const BoardRouter = createTRPCRouter({
                 ownerId: session.user.id,
             }).returning({ id: boards.id, name: boards.name });
 
-            // Create default statuses for that board
-            const defaultStatuses: Array<InferInsertModel<typeof taskStatuses>> = [
-                {
-                    name: "To Do",
-                    boardId: board.id,
-                    color: "#3B82F6", // blue-500
-                    position: 1,
-                },
-                {
-                    name: "In Progress",
-                    boardId: board.id,
-                    color: "#F59E0B", // amber-500
-                    position: 2,
-                },
-                {
-                    name: "Done",
-                    boardId: board.id,
-                    color: "#10B981", // emerald-500
-                    position: 3,
-                },
-            ];
-
             await db.insert(taskStatuses).values(
-                defaultStatuses
+                defaultStatuses.map(status => ({
+                    ...status,
+                    boardId: board.id
+                }))
             );
 
             return board;
@@ -55,36 +37,23 @@ export const BoardRouter = createTRPCRouter({
         )
         .query(async ({ ctx, input }) => {
             const { db, session } = ctx;
-            const rows = await db
-                .select({
-                    boardId: boards.id,
-                    boardName: boards.name,
-                    boardDescription: boards.description,
-                    statusId: taskStatuses.id,
-                    statusName: taskStatuses.name,
-                    statusColor: taskStatuses.color,
-                    statusPosition: taskStatuses.position,
-                })
+            const [board] = await db
+                .select()
                 .from(boards)
-                .leftJoin(taskStatuses, eq(taskStatuses.boardId, boards.id))
-                .where(and(eq(boards.id, input.id), eq(boards.ownerId, session.user.id)));
+                .where(and(eq(boards.id, input.id), eq(boards.ownerId, session.user.id)))
+                .limit(1);
 
-            const board = rows.length
-                ? {
-                    id: rows[0].boardId,
-                    name: rows[0].boardName,
-                    description: rows[0].boardDescription,
-                    ownerId: session.user.id,
-                    taskStatuses: rows.map((r) => ({
-                        id: r.statusId,
-                        name: r.statusName,
-                        color: r.statusColor,
-                        position: r.statusPosition,
-                        boardId: input.id,
-                    })),
-                }
-                : null;
-            return board;
+            if (!board) return null;
+
+            const taskStatusesForBoard = await db
+                .select()
+                .from(taskStatuses)
+                .where(eq(taskStatuses.boardId, input.id))
+
+            return {
+                ...board,
+                taskStatuses: taskStatusesForBoard,
+            };
         }),
     getUserBoards: protectedProcedure
         .query(async ({ ctx }) => {

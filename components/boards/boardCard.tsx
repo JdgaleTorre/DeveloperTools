@@ -2,10 +2,10 @@
 import { useRouter } from "next/navigation";
 import CustomButton from "../ui/button";
 import { trpc } from "@/trpc/client";
-import { InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import { boards } from "@/app/schema";
 
-export default function BoardCard({ board }: { board: InferInsertModel<typeof boards> }) {
+export default function BoardCard({ board }: { board: InferSelectModel<typeof boards> }) {
     const router = useRouter();
     const utils = trpc.useUtils();
     const { data } = trpc.board.getUserBoards.useQuery() || [];
@@ -23,7 +23,7 @@ export default function BoardCard({ board }: { board: InferInsertModel<typeof bo
             <p className="mb-4">{board.description}</p>
             <CustomButton className="z-50" variant="destructive" onClick={(e) => {
                 e.stopPropagation();
-                mutate({ id: board.id! });
+                mutate({ id: board.id });
             }}>
                 Delete Board
             </CustomButton>
