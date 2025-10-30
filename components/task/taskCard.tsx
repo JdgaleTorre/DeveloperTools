@@ -70,7 +70,7 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
             dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
         })}`}
             ref={setNodeRef}
-            style={{ ...style, backgroundColor: status.color ?? 'transparent', color: getContrastColor(status.color ?? "#fff") }}>
+            style={{ ...style, backgroundColor: status.color ?? '#fff', color: getContrastColor(status.color ?? "#fff") }}>
             <div className="flex-grow"
                 {...listeners}
                 {...attributes}>

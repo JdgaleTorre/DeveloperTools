@@ -10,6 +10,8 @@ import { DraggableData } from "@/lib/utils";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority"
 import { Move } from "lucide-react";
+import CustomInput from "../ui/input";
+import { trpc } from "@/trpc/client";
 
 interface StatusColumnProps {
     status: InferSelectModel<typeof taskStatuses>,
@@ -21,6 +23,15 @@ interface StatusColumnProps {
 
 export default function StatusColumn({ status, tasksList, statusLength, isOverlay }: StatusColumnProps) {
     const [insertState, setInsertState] = useState(false);
+    const utils = trpc.useUtils();
+    const [newStatus, setNewStatus] = useState("");
+    const { mutate: insertStatus } = trpc.taskStatuses.insert.useMutation({
+        onSuccess: async () => {
+            utils.board.getById.invalidate();
+        }
+    });
+
+
     const { setNodeRef,
         attributes,
         listeners,
@@ -54,6 +65,35 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         },
     }
     );
+
+    function createStatus() {
+        insertStatus({ ...status, name: newStatus, color: status.color ?? '' })
+
+    }
+
+    if (status.id === "") {
+        return (
+            <div key={status.id}
+                style={style}
+                ref={setNodeRef}
+                className={`w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0 ${variants({
+                    dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+                })}`}
+            >
+                <div className="flex justify-between cursor-pointer">
+                    {/* <h2 className="text-lg font-semibold flex-grow ">{status.name}</h2> */}
+                    <CustomInput autoFocus placeholder="New Status" variant="default" onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            createStatus()
+                        }
+                    }}
+                        value={newStatus} onChange={(e) => setNewStatus(e.target.value)}
+                    />
+
+                </div>
+            </div>
+        )
+    }
 
     //{ width: `${100 / statusLength}%`, ...style }
     return (

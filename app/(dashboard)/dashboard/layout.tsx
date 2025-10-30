@@ -38,7 +38,7 @@ export default async function DashBoardLayout({ children }: Readonly<{ children:
                     <TRPCProvider>
                         <HydrateClient>
                             <AuthProvider>
-                                <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+                                <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center mx-auto max-w-7xl min-h-screen p-8 pb-20 gap-16 sm:p-20 overflow-hidden">
                                     {children}
                                     <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
                                         <span className="text-sm text-gray-500">© 2025 Jose Gale</span>

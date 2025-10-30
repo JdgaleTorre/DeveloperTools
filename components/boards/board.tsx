@@ -25,6 +25,7 @@ import {
 import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
+import CustomButton from "../ui/button";
 
 
 
@@ -309,15 +310,27 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
         }
     }
 
+    function createNewStatus() {
+        utils.board.getById.setData({ id: boardId }, (old) => {
+            if (!old) return old;
+
+            setRerenderKey((k) => k + 1)
+            const newStatues = [...old.taskStatuses, { id: '', name: '', boardId: boardId, color: "#FFFFFF", position: old.taskStatuses.length + 1, createdAt: new Date() }]
+
+            return { ...old, taskStatuses: newStatues }
+        })
+    }
+
     // ─────────────────────────────
     // 🖥️ Render
     // ─────────────────────────────
     return (
-        <div className="p-4 w-full max-w-4xl mx-auto h-full">
+        <div className="p-4 h-full">
             <h1 className="text-2xl font-bold text-left">Board {board?.name}</h1>
             <p className="mt-2 text-left">Description: {board?.description}</p>
 
-            <div className="mt-6 w-full flex gap-4 items-start">
+            <div className="my-6 py-4 max-w-6xl flex wrap-normal gap-4 items-start overflow-x-auto overflow-y-hidden scroll-mx-5 
+            scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
                 <DndContext
                     accessibility={{ announcements }}
                     sensors={sensors}
@@ -336,6 +349,13 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                 statusLength={board.taskStatuses.length}
                             />
                         ))}
+
+                        <div className="min-w-44">
+                            <CustomButton  variant="ghost" onClick={() => createNewStatus()}>+ New Status</CustomButton>
+
+                        </div>
+
+
                     </SortableContext>
                     <DragOverlay>
                         {activeTask ? <TaskCard isOverlay status={board?.taskStatuses.find((status) => status.id === activeTask.statusId) ?? {
@@ -358,6 +378,6 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                     </DragOverlay>
                 </DndContext>
             </div>
-        </div>
+        </div >
     );
 }
