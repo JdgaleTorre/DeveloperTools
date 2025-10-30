@@ -60,7 +60,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         <div key={status.id}
             style={style}
             ref={setNodeRef}
-            className={`min-w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0 ${variants({
+            className={`w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark z-0 ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
             })}`}
         >
@@ -80,7 +80,6 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                 <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
             ) : (
                 <CustomButton className="w-full relative z-50" variant="ghost" size="sm" onClick={(e) => {
-                    console.log('Here')
                     e.preventDefault()
                     setInsertState(true)
                 }}>+ Add New Task</CustomButton>

@@ -30,7 +30,7 @@ export default function NewTaskCard({ status, board, cancelFn }: { status: Infer
         cancelFn();
     };
     return (
-        <div className="my-2 p-2 rounded shadow" style={{ backgroundColor: status.color ?? 'transparent', color: getContrastColor(status.color ?? "#fff"), }}>
+        <div className="w-full my-2 p-2 rounded shadow" style={{ backgroundColor: status.color ?? 'transparent', color: getContrastColor(status.color ?? "#fff"), }}>
             <CustomInput placeholder="New Task" label="New Task"
                 value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} />
             <CustomInput placeholder="Description" label="Description"
