@@ -63,6 +63,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                         ...u,
                         description: u.description ?? null,
                         createdAt: new Date(),
+                        statusId: u.statusId ?? null,
                     }));
                 }
                 const updatedIds = updatedTasks.map((t) => t.id);
@@ -300,7 +301,11 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
 
             // 🚀 Optimistic update via tRPC
             updateTask(
-                newTasks.map((t) => ({ ...t, description: t.description ?? "" }))
+                newTasks.map((t) => ({
+                    ...t,
+                    description: t.description ?? "",
+                    statusId: t.statusId ?? ""
+                }))
             );
         }
 
@@ -339,6 +344,26 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                     onDragOver={onDragOver}
                 >
                     <SortableContext items={board.taskStatuses.map((s) => s.id)}>
+                        {(tasks ?? []).filter((task) => task.statusId === null).length >= 0 && (
+                            <StatusColumn
+                                key={`null-${rerenderKey}`}
+                                status={{
+                                    boardId: boardId,
+                                    name: "Unassigned",
+                                    id: "unassigned",
+                                    createdAt: new Date(),
+                                    color: "#FFFFFF",
+                                    position: 0,
+                                }}
+                                tasksList={
+                                    tasks?.filter((task) => task.statusId === null) ?? []
+                                }
+                                statusLength={board.taskStatuses.length}
+                                notShowActionHeaders
+                            />
+                        )}
+
+
                         {board.taskStatuses.map((status) => (
                             <StatusColumn
                                 key={`${status.id}-${rerenderKey}`}
@@ -351,7 +376,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                         ))}
 
                         <div className="min-w-44">
-                            <CustomButton  variant="ghost" onClick={() => createNewStatus()}>+ New Status</CustomButton>
+                            <CustomButton variant="ghost" onClick={() => createNewStatus()}>+ New Status</CustomButton>
 
                         </div>
 

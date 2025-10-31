@@ -1,6 +1,6 @@
 import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { taskStatuses } from "@/app/schema";
+import { tasks, taskStatuses } from "@/app/schema";
 import { eq } from "drizzle-orm";
 import { conflictUpdateSetAllColumns } from "@/lib/utils"
 
@@ -82,5 +82,18 @@ export const taskStatusesRouter = createTRPCRouter({
                 set: conflictUpdateSetAllColumns(taskStatuses, ["id"]),
             })
 
+        }),
+
+
+    delete: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            const { db, session } = ctx;
+
+            await db.delete(taskStatuses).where(eq(taskStatuses.id, input.id))
         })
 })

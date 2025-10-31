@@ -1,0 +1,2 @@
+ALTER TABLE "devtools_task_custom_field_values" DROP CONSTRAINT "devtools_task_custom_field_values_task_id_field_id_pk";--> statement-breakpoint
+ALTER TABLE "devtools_tasks" ALTER COLUMN "status_id" DROP NOT NULL;
