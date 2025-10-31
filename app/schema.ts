@@ -129,7 +129,6 @@ export const tasks = pgTable("tasks", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   // Link to custom status
   statusId: uuid("status_id")
-    .notNull()
     .references(() => taskStatuses.id, { onDelete: "set null" }),
 });
 

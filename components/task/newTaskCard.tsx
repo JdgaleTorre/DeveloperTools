@@ -1,5 +1,5 @@
 "use client";
-import { getContrastColor } from "@/lib/utils";
+import { BACKLOGID, getContrastColor } from "@/lib/utils";
 import CustomButton from "../ui/button";
 import CustomInput from "../ui/input";
 import { InferSelectModel } from "drizzle-orm";
@@ -22,7 +22,7 @@ export default function NewTaskCard({ status, board, cancelFn }: { status: Infer
 
     const handleClick = () => {
         if (!task.title || !status.id) return;
-        mutate({ ...task, statusId: status.id!, boardId: board.id! });
+        mutate({ ...task, statusId: status.id === BACKLOGID ? undefined : status.id, boardId: board.id! });
     };
 
     const handleCancel = () => {

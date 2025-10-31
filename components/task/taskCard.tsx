@@ -77,8 +77,8 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
                 <p className="text-md mb-2">{task.title}</p>
                 <p className="text-sm">{task.description}</p>
             </div>
-            <CustomButton variant="ghost" size="sm" onClick={() => { }}><Pencil className="w-4 h-4 z-50" /></CustomButton>
-            <CustomButton variant="ghost-destructive" size="sm" onClick={(e) => handleDeleteTask(e)}><Trash2 className="w-4 h-4 z-50" /></CustomButton>
+            <CustomButton variant="ghost" size="sm" onClick={() => { }}><Pencil className="w-4 h-4 z-30" /></CustomButton>
+            <CustomButton variant="ghost-destructive" size="sm" onClick={(e) => handleDeleteTask(e)}><Trash2 className="w-4 h-4 z-30" /></CustomButton>
 
         </div>
     )
