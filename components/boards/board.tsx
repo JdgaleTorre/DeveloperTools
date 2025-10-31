@@ -26,6 +26,7 @@ import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
 import CustomButton from "../ui/button";
+import { BACKLOGID, BACKLOGNAME } from "@/lib/utils";
 
 
 
@@ -349,8 +350,8 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                 key={`null-${rerenderKey}`}
                                 status={{
                                     boardId: boardId,
-                                    name: "Unassigned",
-                                    id: "unassigned",
+                                    name: BACKLOGNAME,
+                                    id: BACKLOGID,
                                     createdAt: new Date(),
                                     color: "#FFFFFF",
                                     position: 0,

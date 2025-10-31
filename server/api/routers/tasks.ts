@@ -26,7 +26,7 @@ export const TasksRouter = createTRPCRouter({
                 title: z.string(),
                 description: z.string().optional(),
                 boardId: z.string(),
-                statusId: z.string(),
+                statusId: z.string().optional(),
             }),
         )
         .mutation(async ({ ctx, input }) => {

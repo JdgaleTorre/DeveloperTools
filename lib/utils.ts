@@ -1,7 +1,10 @@
 import { tasks, taskStatuses } from "@/app/schema";
 import { ClassValue, clsx } from "clsx"
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { twMerge } from 'tailwind-merge'
+import { twMerge } from 'tailwind-merge';
+
+export const BACKLOGID = 'backlogid';
+export const BACKLOGNAME = 'Backlog';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
