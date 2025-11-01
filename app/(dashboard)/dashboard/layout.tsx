@@ -7,10 +7,9 @@ import { AuthProvider } from "@/lib/provider";
 import { ToastProvider } from "@/components/ui/toast";
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
-// import { useState } from "react";
-import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
+import ProtectedLayout from "@/components/layout/protectedLayout";
 
 
 const geistSans = Geist({
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashBoardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
-    // const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
     const session = await getServerAuthSession();
 
     if (!session) {
@@ -42,51 +41,9 @@ export default async function DashBoardLayout({ children }: Readonly<{ children:
                     <TRPCProvider>
                         <HydrateClient>
                             <AuthProvider>
-                                {/* <div className="mx-auto w-full min-h-screen grid grid-rows-[auto_1fr_auto]">
-                                    <header className="col-span-5 p-4 bg-primary">
-                                        <h1 className="text-center text-2xl">Header</h1>
-                                    </header>
-                                    <aside className="col-span-5 md:col-span-1 p-10 border-r-1">
-                                        <h1 className="text-center text-2xl text-white">Menu</h1>
-                                    </aside>
-                                    <main className="col-span-5 md:col-span-4 p-10 h-full relative">
-                                        {children}
-                                        <footer className="col-span-5 md:col-span-4 p-4 bottom-0">
-                                            <h1 className="text-center text-sm text-gray-500">© 2025 Jose Gale</h1>
-                                        </footer>
-                                    </main>
-
-
-                                </div> */}
-                                <div className="flex min-h-screen flex-col">
-                                    {/* Header */}
-                                    <Header />
-
-                                    <div className="flex flex-1">
-                                        <Sidebar />
-
-                                        {/* Main Content */}
-                                        <main className="flex-1 overflow-auto bg-muted/30 p-8">{children}</main>
-                                    </div>
-
-                                    {/* Footer */}
-                                    <footer className="border-t border-border bg-background px-6 py-4 dark:bg-background-dark">
-                                        <div className="flex items-center justify-between">
-                                            <p className="text-sm text-muted-foreground">© 2025 Component Library. All rights reserved.</p>
-                                            <div className="flex items-center gap-6">
-                                                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                                                    Privacy
-                                                </a>
-                                                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                                                    Terms
-                                                </a>
-                                                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                                                    Contact
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </footer>
-                                </div>
+                                <ProtectedLayout>
+                                    {children}
+                                </ProtectedLayout>
                             </AuthProvider>
                         </HydrateClient>
                     </TRPCProvider>

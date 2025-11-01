@@ -1,11 +1,11 @@
 "use client";
-export default function Header() {
+export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
 
     return (
         <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-background px-6 dark:bg-background-dark">
             <div className="flex items-center gap-4">
                 <button
-                    onClick={() => { }}
+                    onClick={sideBarFunc}
                     className="rounded-lg p-2 hover:bg-accent"
                     aria-label="Toggle sidebar"
                 >
