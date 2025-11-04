@@ -1,5 +1,6 @@
 'use client';
 import BoardCard from "@/components/boards/boardCard";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 
@@ -17,6 +18,13 @@ export default function Dashboard() {
                 {data && data.map((board) => (
                     <BoardCard key={board.id} board={board} />
                 ))}
+
+                <Card className="cursor-pointer" onClick={() => router.push('/dashboard/boards/create')} >
+                    <CardHeader>
+                        <CardTitle>Create Board</CardTitle>
+                        <CardDescription>Create a new board to manage your tasks.</CardDescription>
+                    </CardHeader>
+                </Card>
 
                 <div className="m4 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
                     onClick={() => router.push('/dashboard/boards/create')}>
