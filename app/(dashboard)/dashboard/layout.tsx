@@ -7,8 +7,6 @@ import { AuthProvider } from "@/lib/provider";
 import { ToastProvider } from "@/components/ui/toast";
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
-import Header from "@/components/layout/header";
-import Sidebar from "@/components/layout/sidebar";
 import ProtectedLayout from "@/components/layout/protectedLayout";
 
 
