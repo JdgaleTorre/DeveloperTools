@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ChartSpline, Home, LayoutDashboard, LayoutDashboardIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
     return (
@@ -12,17 +13,13 @@ export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
             }
         >
             <nav className="flex flex-col gap-1 p-4">
-                <a
-                    href="#"
-                    className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-primary-foreground"
-                >
+                <Link href="/dashboard/"
+                    className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-primary-foreground">
                     <Home />
                     Home
-                </a>
-                <a
-                    href="#"
-                    className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-primary-foreground"
-                >
+                </Link>
+                <Link className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-primary-foreground"
+                    href="/dashboard/boards">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
@@ -38,6 +35,12 @@ export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
                         <rect width="3" height="5" x="14" y="7" />
                     </svg>
                     Boards
+                </Link>
+                <a
+                    href="#"
+
+                >
+
                 </a>
                 <a
                     href="#"

@@ -22,7 +22,7 @@ export default function ProtectedLayout({ children }: Readonly<{ children: React
         {/* Footer */}
         <footer className="border-t border-border bg-background px-6 py-4 dark:bg-background-dark">
             <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">© 2025 Component Library. All rights reserved.</p>
+                <p className="text-sm text-muted-foreground">© 2025 Jose Gale. All rights reserved.</p>
                 <div className="flex items-center gap-6">
                     <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                         Privacy

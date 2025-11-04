@@ -25,7 +25,7 @@ export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
                         <line x1="3" x2="21" y1="18" y2="18" />
                     </svg>
                 </button>
-                <h1 className="text-xl font-bold text-foreground">Component Library</h1>
+                <h1 className="text-xl font-bold text-foreground">Developer Tools</h1>
             </div>
             <div className="flex items-center gap-4">
                 <button className="rounded-lg p-2 hover:bg-accent" aria-label="Notifications">
