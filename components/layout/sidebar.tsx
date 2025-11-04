@@ -7,7 +7,7 @@ export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
         <aside
             className={
                 cn(
-                    "bg-background transition-all duration-300 dark:bg-background-dark",
+                    "bg-surface transition-all duration-300 dark:bg-surface-dark",
                     isSidebarOpen ? "w-64 border-r border-border" : "w-0 overflow-hidden",
                 )
             }

@@ -29,7 +29,7 @@ export default function Dashboard() {
             </h1>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-3">
                 {Object.keys(options).map((option) => (
-                    <div key={option} className="m4 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
+                    <div key={option} className="m4 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer bg-card border-border  bg-surface  dark:bg-surface-dark"
                         onClick={() => handleOptionClick(options[option].link)}>
                         <h2 className="text-2xl font-semibold">{options[option].title}</h2>
                         <p className="mb-4">{options[option].description}</p>

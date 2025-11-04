@@ -2,7 +2,7 @@
 export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
 
     return (
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-background px-6 dark:bg-background-dark">
+        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-surface px-6 dark:bg-surface-dark">
             <div className="flex items-center gap-4">
                 <button
                     onClick={sideBarFunc}

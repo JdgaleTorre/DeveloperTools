@@ -20,7 +20,7 @@ export default function ProtectedLayout({ children }: Readonly<{ children: React
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-border bg-background px-6 py-4 dark:bg-background-dark">
+        <footer className="border-t border-border bg-surface px-6 py-4 dark:bg-surface-dark">
             <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">© 2025 Jose Gale. All rights reserved.</p>
                 <div className="flex items-center gap-6">
