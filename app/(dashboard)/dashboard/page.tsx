@@ -1,4 +1,5 @@
 'use client';
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
@@ -29,11 +30,17 @@ export default function Dashboard() {
             </h1>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-3">
                 {Object.keys(options).map((option) => (
-                    <div key={option} className="m4 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
-                        onClick={() => handleOptionClick(options[option].link)}>
-                        <h2 className="text-2xl font-semibold">{options[option].title}</h2>
-                        <p className="mb-4">{options[option].description}</p>
-                    </div>
+                    <Card className="cursor-pointer" key={options[option].title} onClick={() => handleOptionClick(options[option].link)}>
+                        <CardHeader>
+                            <CardTitle>
+                                {options[option].title}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardDescription className="mx-4 mb-4">
+                            {options[option].description}
+                        </CardDescription>
+                    </Card>
+
                 ))}
             </div>
 

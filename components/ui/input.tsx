@@ -28,7 +28,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
 
                         // Variant styles
                         variant === "default" && [
-                            "border border-input bg-background text-foreground",
+                            "border border-input bg-surface dark:bg-surface-dark text-foreground",
                             "placeholder:text-muted-foreground",
                             "focus:ring-ring focus:ring-gray-500",
                         ],
@@ -40,7 +40,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         variant === "filled" && [
                             "border-0 bg-muted text-foreground",
                             "placeholder:text-muted-foreground",
-                            "focus:bg-background focus:ring-ring",
+                            "focus:bg-surface dark:bg-surface-dark focus:ring-ring",
                         ],
 
                         // Size styles

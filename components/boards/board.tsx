@@ -331,11 +331,11 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
     // 🖥️ Render
     // ─────────────────────────────
     return (
-        <div className="p-4 h-full">
+        <div>
             <h1 className="text-2xl font-bold text-left">Board {board?.name}</h1>
             <p className="mt-2 text-left">Description: {board?.description}</p>
 
-            <div className="my-6 py-4 max-w-6xl flex wrap-normal gap-4 items-start overflow-x-auto overflow-y-hidden scroll-mx-5 
+            <div className="my-6 py-4  flex wrap-normal gap-4 items-start overflow-x-auto overflow-y-hidden scroll-mx-5 
             scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
                 <DndContext
                     accessibility={{ announcements }}
