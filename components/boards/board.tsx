@@ -27,6 +27,7 @@ import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
 import CustomButton from "../ui/button";
 import { BACKLOGID, BACKLOGNAME } from "@/lib/utils";
+import { AIChatPopup } from "../ai/popup-ai";
 
 
 
@@ -403,6 +404,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
 
                     </DragOverlay>
                 </DndContext>
+                <AIChatPopup />
             </div>
         </div >
     );
