@@ -19,18 +19,12 @@ export default function Dashboard() {
                     <BoardCard key={board.id} board={board} />
                 ))}
 
-                <Card className="cursor-pointer" onClick={() => router.push('/dashboard/boards/create')} >
+                <Card hover className="cursor-pointer" onClick={() => router.push('/dashboard/boards/create')} >
                     <CardHeader>
                         <CardTitle>Create Board</CardTitle>
                         <CardDescription>Create a new board to manage your tasks.</CardDescription>
                     </CardHeader>
                 </Card>
-
-                <div className="m4 p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
-                    onClick={() => router.push('/dashboard/boards/create')}>
-                    <h2 className="text-2xl font-semibold">Create Board</h2>
-                    <p className="mb-4">Create a new board to manage your tasks.</p>
-                </div>
 
             </div>
 
