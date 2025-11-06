@@ -1,0 +1,21 @@
+name: Drizzle Migrations
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install deps
+        run: npm ci
+      - name: Push Drizzle migrations
+        env:
+          AUTH_DRIZZLE_URL: ${{ secrets.AUTH_DRIZZLE_URL }}
+        run: npx drizzle-kit push
