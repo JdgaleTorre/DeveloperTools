@@ -138,7 +138,6 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         <Card key={status.id}
             style={style}
             ref={setNodeRef}
-            hover
             className={`w-72 p-4 flex-shrink-0 h-auto ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
             })}`}>
