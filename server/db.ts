@@ -8,7 +8,7 @@ const globalForDb = globalThis as unknown as {
   db: ReturnType<typeof drizzle> | undefined;
 };
 
-const connectionString = process.env.AUTH_DRIZZLE_URL!; // your DATABASE_URL equivalent
+const connectionString = process.env.DB_POSTGRES_URL!; // your DATABASE_URL equivalent
 
 // Only create a new connection if not already present (important for Next.js hot reload)
 const conn =

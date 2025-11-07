@@ -18,6 +18,6 @@ jobs:
       - name: Push Drizzle migrations
         env:
           NODE_ENV: production
-          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          DB_POSTGRES_URL: ${{ secrets.DB_POSTGRES_URL }}
           AUTH_DRIZZLE_URL: ${{ secrets.AUTH_DRIZZLE_URL }}
         run: npx drizzle-kit push --force
