@@ -1,4 +1,6 @@
 import { consumeStream, convertToModelMessages, streamText, type UIMessage } from "ai"
+import { openai } from '@ai-sdk/openai';
+
 
 export const maxDuration = 30
 
@@ -8,7 +10,7 @@ export async function POST(req: Request) {
     const prompt = convertToModelMessages(messages)
 
     const result = streamText({
-        model: "openai/gpt-5-mini",
+        model: openai('gpt-5-nano'),
         prompt,
         abortSignal: req.signal,
     })
