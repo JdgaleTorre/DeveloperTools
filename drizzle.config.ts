@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { defineConfig } from "drizzle-kit";
 
 const url =
-  process.env.NODE_ENV === 'production' ? process.env.POSTGRES_URL : process.env.LOCAL_POSTGRES_URL;
+  process.env.NODE_ENV === 'production' ? process.env.DB_POSTGRES_URL : process.env.LOCAL_POSTGRES_URL;
 
 console.log("Using environment:", process.env.NODE_ENV);
 console.log("Using database URL:", url);
