@@ -26,7 +26,7 @@ import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
 import CustomButton from "../ui/button";
-import { API_TASK_CREATE_ENDPOINT, BACKLOGID, BACKLOGNAME } from "@/lib/utils";
+import { API_TASK_CREATE_ENDPOINT, BACKLOGCOLOR, BACKLOGID, BACKLOGNAME } from "@/lib/utils";
 import { AIAgentPopup } from "../ai/popup-agent";
 import { AITaskResponse } from "@/lib/ai";
 import { TaskList } from "../ai/taskList";
@@ -87,6 +87,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                 ...found,
                                 description: found.description ?? t.description ?? null,
                                 createdAt: t.createdAt,
+                                statusId: t.statusId ?? null,
                             };
                         })()
                         : t
@@ -314,7 +315,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                 newTasks.map((t) => ({
                     ...t,
                     description: t.description ?? "",
-                    statusId: t.statusId ?? ""
+                    statusId: t.statusId ?? undefined,
                 }))
             );
         }
@@ -362,7 +363,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                     name: BACKLOGNAME,
                                     id: BACKLOGID,
                                     createdAt: new Date(),
-                                    color: "#FFFFFF",
+                                    color: BACKLOGCOLOR,
                                     position: 0,
                                 }}
                                 tasksList={

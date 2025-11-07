@@ -84,6 +84,7 @@ export const TasksRouter = createTRPCRouter({
                         statusId: z.string().optional(),
                         position: z.int(),
                         boardId: z.string(),
+                        createdAt: z.date().optional()
                     }
                 )
             )

@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge';
 
 export const BACKLOGID = 'backlogid';
 export const BACKLOGNAME = 'Backlog';
+export const BACKLOGCOLOR = "#f4f9ff";
 
 export const API_TASK_CREATE_ENDPOINT = '/api/agent/tasks';
 
