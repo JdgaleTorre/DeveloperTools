@@ -3,7 +3,7 @@ import { type InputHTMLAttributes, forwardRef } from "react"
 
 export interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
     variant?: "default" | "outline" | "filled"
-    inputSize?: "sm" | "md" | "lg"
+    inputSize?: "xs" | "sm" | "md" | "lg"
     error?: boolean
     label?: string
 }
@@ -44,6 +44,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         ],
 
                         // Size styles
+                        inputSize === "xs" && "h-6 px-1 py-1 text-xs",
                         inputSize === "sm" && "h-8 px-3 py-1 text-sm",
                         inputSize === "md" && "h-10 px-4 py-2 text-base",
                         inputSize === "lg" && "h-12 px-5 py-3 text-lg",

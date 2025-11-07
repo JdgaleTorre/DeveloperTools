@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     return result.toUIMessageStreamResponse({
         onFinish: async ({ isAborted }) => {
             if (isAborted) {
-                console.log("[v0] Chat request aborted")
+                console.log("Chat request aborted")
             }
         },
         consumeSseStream: consumeStream,

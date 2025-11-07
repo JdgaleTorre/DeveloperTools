@@ -6,6 +6,8 @@ import { twMerge } from 'tailwind-merge';
 export const BACKLOGID = 'backlogid';
 export const BACKLOGNAME = 'Backlog';
 
+export const API_TASK_CREATE_ENDPOINT = '/api/agent/tasks';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

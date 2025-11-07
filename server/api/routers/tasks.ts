@@ -95,5 +95,28 @@ export const TasksRouter = createTRPCRouter({
                 target: tasks.id,
                 set: conflictUpdateSetAllColumns(tasks, ["id"]),
             })
+        }),
+    insertMany: protectedProcedure
+        .input(
+            z.array(
+                z.object(
+                    {
+                        id: z.string().optional(),
+                        title: z.string(),
+                        description: z.string().optional(),
+                        statusId: z.string().optional(),
+                        position: z.int().optional(),
+                        boardId: z.string(),
+                    }
+                )
+            )
+        )
+        .mutation(async ({ ctx, input }) => {
+            const { db, session } = ctx;
+
+            return db.insert(tasks).values(input).onConflictDoUpdate({
+                target: tasks.id,
+                set: conflictUpdateSetAllColumns(tasks, ["id"]),
+            })
         })
 });
