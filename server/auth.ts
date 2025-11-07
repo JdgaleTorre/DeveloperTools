@@ -80,6 +80,12 @@ export const authOptions: NextAuthOptions = {
 
             return true;
         },
+        async redirect({ url, baseUrl }) {
+            // If signing in from the sign-in page, always go to dashboard
+            if (url.endsWith("/")) return `${baseUrl}/dashboard`;
+            if (new URL(url).origin === baseUrl) return url;
+            return baseUrl;
+        },
     },
     adapter: DrizzleAdapter(db
         , {
@@ -97,9 +103,9 @@ export const authOptions: NextAuthOptions = {
     ],
     // Optional config
     secret: process.env.NEXTAUTH_SECRET,
-      pages: {
-        signIn: "/dashboard", // optional custom sign-in page
-      },
+    // pages: {
+    //     signIn: "/dashboard", // optional custom sign-in page
+    // },
 }
 
 export const getServerAuthSession = () => getServerSession(authOptions);

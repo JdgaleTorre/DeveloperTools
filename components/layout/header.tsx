@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import { ThemeToggle } from "../ui/theme-toggle";
 
 export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
@@ -32,7 +33,7 @@ export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
             </div>
             <div className="flex items-center gap-4">
                 <ThemeToggle />
-                <button className="rounded-lg p-2 hover:bg-accent" aria-label="Settings">
+                <button className="rounded-lg p-2 hover:bg-accent" aria-label="Settings" onClick={() => signOut()}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
