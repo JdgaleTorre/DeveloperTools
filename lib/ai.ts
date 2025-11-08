@@ -11,7 +11,7 @@ const aiTaskSchema = z.object({
 
 export type AITaskResponse = z.infer<typeof aiTaskSchema>
 
-const mockTaskResponse = {
+export const mockTaskResponse = {
   tasks: [
     {
       title: "Define project goals",

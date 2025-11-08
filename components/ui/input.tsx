@@ -44,7 +44,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         ],
 
                         // Size styles
-                        inputSize === "xs" && "h-6 px-1 py-1 text-xs",
+                        inputSize === "xs" && "h-6 px-1 py-1 text-xs ring-0 focus:ring-0 focus:ring-offset-0",
                         inputSize === "sm" && "h-8 px-3 py-1 text-sm",
                         inputSize === "md" && "h-10 px-4 py-2 text-base",
                         inputSize === "lg" && "h-12 px-5 py-3 text-lg",

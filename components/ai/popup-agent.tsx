@@ -7,7 +7,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import CustomInput from "../ui/input";
 import CustomButton from "../ui/button";
-import { BotMessageSquare } from "lucide-react";
+import { BotMessageSquare, X } from "lucide-react";
+import { mockTaskResponse } from "@/lib/ai";
 
 
 type AIAgentPopupProps<T> = {
@@ -29,7 +30,7 @@ export function AIAgentPopup<T>(
 
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [response, setResponse] = useState<T | null>(null);
+    const [response, setResponse] = useState<T | null>(mockTaskResponse as T);
 
     const [isLoading, setIsLoading] = useState(false);
     const [showPreview, setShowPreview] = useState(true);
@@ -91,28 +92,14 @@ export function AIAgentPopup<T>(
                 aria-label={isOpen ? "Close chat" : "Open chat"}
             >
                 {isOpen ? (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-destructive-foreground"
-                    >
-                        <path d="M18 6 6 18" />
-                        <path d="m6 6 12 12" />
-                    </svg>
+                    <X />
                 ) : (
                     <BotMessageSquare className="text-white" />
                 )}
             </button>
 
             {isOpen && (
-                <div className="fixed bottom-32 right-6 z-40 flex h-[500px] w-[380px] flex-col rounded-lg border border-border bg-card shadow-2xl">
+                <div className="fixed bottom-32 right-6 z-40 flex h-[500px] w-[380px] flex-col rounded-lg border border-border bg-card dark:bg-card-dark shadow-2xl">
                     <div className="space-y-2 p-4">
                         <label htmlFor="ai-input" className="text-sm font-medium text-foreground">
                             {label}
@@ -135,7 +122,7 @@ export function AIAgentPopup<T>(
 
                     {/* Loading State */}
                     {isLoading && (
-                        <div className="rounded-lg border border-border bg-card p-6">
+                        <div className="rounded-lg border border-border bg-card dark:bg-card-dark p-6">
                             <div className="flex items-center gap-3">
                                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                                 <p className="text-sm text-muted-foreground">AI is thinking...</p>
@@ -145,8 +132,8 @@ export function AIAgentPopup<T>(
 
                     {/* Preview Section */}
                     {showPreview && !isLoading && response && (
-                        <div className="space-y-4 border border-border bg-card p-6 overflow-y-auto
-                        scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
+                        <div className="space-y-4 border border-border bg-card dark:bg-card-dark p-2 overflow-y-auto
+                        scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent">
                             <div className="space-y-2">
                                 <h3 className="text-lg font-semibold text-foreground">{labelPreview}</h3>
                                 <div className="rounded-md bg-muted p-4">
