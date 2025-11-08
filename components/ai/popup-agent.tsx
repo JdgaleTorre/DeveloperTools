@@ -17,6 +17,31 @@ type AIAgentPopupProps<T> = {
     responseHandler: (data: T, onAccept: () => void, onReject: () => void) => React.ReactNode
 }
 
+const mockTaskResponse = {
+    tasks: [
+        {
+            title: "Define project goals",
+            description: "Clarify the objectives and deliverables for the new project."
+        },
+        {
+            title: "Create project roadmap",
+            description: "Break down the project into milestones and assign timelines."
+        },
+        {
+            title: "Set up development environment",
+            description: "Install necessary tools, libraries, and configure the workspace."
+        },
+        {
+            title: "Implement core features",
+            description: "Start coding the main functionalities as per the specifications."
+        },
+        {
+            title: "Testing and QA",
+            description: "Write tests, perform manual QA, and ensure everything works as expected."
+        }
+    ]
+};
+
 
 export function AIAgentPopup<T>(
     {
@@ -29,10 +54,10 @@ export function AIAgentPopup<T>(
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
     const [responseContent, setResponseContent] = useState<React.ReactNode | null>(null);
-    const [response, setResponse] = useState<T | null>(null);
+    const [response, setResponse] = useState<T | null>(mockTaskResponse as T);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [showPreview, setShowPreview] = useState(false);
+    const [showPreview, setShowPreview] = useState(true);
 
 
     const handleSendMessage = async () => {
@@ -146,7 +171,8 @@ export function AIAgentPopup<T>(
 
                     {/* Preview Section */}
                     {showPreview && !isLoading && response && (
-                        <div className="space-y-4 rounded-lg border border-border bg-card p-6 overflow-y-auto">
+                        <div className="space-y-4 border border-border bg-card p-6 overflow-y-auto
+                        scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
                             <div className="space-y-2">
                                 <h3 className="text-lg font-semibold text-foreground">Response Preview</h3>
                                 <div className="rounded-md bg-muted p-4">

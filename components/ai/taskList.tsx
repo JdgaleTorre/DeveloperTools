@@ -28,16 +28,17 @@ export function TaskList({ data, onAccept, onReject }: TaskListProps) {
 
     return (
         <div>
-            <ul className="list-disc pl-5 space-y-2">
+            <ul className="list-disc pl-5 space-y-2 mb-4">
                 {tasks.map((t, i) => (
                     <li key={i} className="flex items-center gap-2">
                         <CustomInput
                             type="checkbox"
                             checked={t.selected}
                             onChange={() => toggleTask(i)}
-                            inputSize={"sm"}
+                            inputSize={"xs"}
+                            className="flex-shrink-1 w-auto"
                         />
-                        <div>
+                        <div className="flex-grow">
                             <p className="font-medium">{t.title}</p>
                             {t.description && (
                                 <p className="text-sm text-muted-foreground">{t.description}</p>
