@@ -22,7 +22,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                     ref={ref}
                     className={cn(
                         // Base styles
-                        "w-full rounded-md font-medium transition-colors dark:text-black",
+                        "w-full rounded-md font-medium transition-colors dark:text-white",
                         "focus:outline-none focus:ring-2 focus:ring-offset-2 ",
                         "disabled:cursor-not-allowed disabled:opacity-50",
 
