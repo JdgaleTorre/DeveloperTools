@@ -26,7 +26,10 @@ import { InferSelectModel } from "drizzle-orm";
 import { taskStatuses, tasks as tasksModel } from "@/app/schema";
 import TaskCard from "../task/taskCard";
 import CustomButton from "../ui/button";
-import { BACKLOGID, BACKLOGNAME } from "@/lib/utils";
+import { API_TASK_CREATE_ENDPOINT, BACKLOGCOLOR, BACKLOGID, BACKLOGNAME } from "@/lib/utils";
+import { AIAgentPopup } from "../ai/popup-agent";
+import { AITaskResponse } from "@/lib/ai";
+import { TaskList } from "../ai/taskList";
 
 
 
@@ -44,6 +47,12 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
             await utils.tasks.getBoardTasks.invalidate({ boardId });
         },
     })
+
+    const { mutate: insertManyTasks } = trpc.tasks.insertMany.useMutation({
+        onSuccess: async () => {
+            await utils.tasks.getBoardTasks.invalidate({ boardId });
+        },
+    });
 
     // ✅ Mutation for task updates
     const { mutate: updateTask } = trpc.tasks.updateMany.useMutation({
@@ -78,6 +87,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                 ...found,
                                 description: found.description ?? t.description ?? null,
                                 createdAt: t.createdAt,
+                                statusId: t.statusId ?? null,
                             };
                         })()
                         : t
@@ -305,7 +315,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                 newTasks.map((t) => ({
                     ...t,
                     description: t.description ?? "",
-                    statusId: t.statusId ?? ""
+                    statusId: t.statusId ?? undefined,
                 }))
             );
         }
@@ -353,7 +363,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                                     name: BACKLOGNAME,
                                     id: BACKLOGID,
                                     createdAt: new Date(),
-                                    color: "#FFFFFF",
+                                    color: BACKLOGCOLOR,
                                     position: 0,
                                 }}
                                 tasksList={
@@ -403,6 +413,25 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
 
                     </DragOverlay>
                 </DndContext>
+                {/* <AIChatPopup /> */}
+                <AIAgentPopup<AITaskResponse>
+                    label="Create Tasks with AI Agent"
+                    labelPreview="Suggested Tasks"
+                    placeholder="Describe the tasks or project"
+                    apiEndPoint={API_TASK_CREATE_ENDPOINT}
+                    responseHandler={(data, onAccept, onReject) => (
+                        <TaskList
+                            data={data}
+                            onAccept={(selectedTasks) => {
+                                console.log("Accepted:", selectedTasks)
+                                insertManyTasks(selectedTasks.map((t) => ({ ...t, boardId: boardId })))
+                                onAccept() // clears popup
+
+                            }}
+                            onReject={onReject}
+                        />
+                    )}
+                />
             </div>
         </div >
     );

@@ -14,6 +14,7 @@ import CustomInput from "../ui/input";
 import { trpc } from "@/trpc/client";
 import { ContextMenu, ContextMenuItem } from "../ui/context_menu";
 import { useToast } from "../ui/toast";
+import { Card, CardBody, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 interface StatusColumnProps {
     status: InferSelectModel<typeof taskStatuses>,
@@ -134,19 +135,18 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
 
     //{ width: `${100 / statusLength}%`, ...style }
     return (
-        <div key={status.id}
+        <Card key={status.id}
             style={style}
             ref={setNodeRef}
-            className={`w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark ${variants({
+            className={`w-72 p-4 flex-shrink-0 h-auto ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-            })}`}
-        >
-            <div className={`flex justify-between ${!notShowActionHeaders && 'cursor-pointer'}`}>
-                <div className="flex-1 flex flex-row justify-between align-middle items-center pr-2"
+            })}`}>
+            <CardHeader className="flex flex-row  justify-between p-2">
+                <div className="flex grow justify-between items-center cursor-grab"
                     {...attributes}
                     {...listeners}>
 
-                    <h2 className="text-lg font-semibold flex-grow ">{status.name}</h2>
+                    <CardTitle>{status.name}</CardTitle>
                     <Move className={`${notShowActionHeaders ? 'hidden' : 'visible'}`} />
                 </div>
                 {!notShowActionHeaders && (
@@ -154,23 +154,64 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                         <CustomButton><EllipsisVertical /></CustomButton>
                     </ContextMenu>
                 )}
+            </CardHeader>
+            <CardBody className="p-2">
+                <SortableContext items={tasksList.map((task) => task.id)}>
+                    {tasksList.map((task) => (
+                        <TaskCard key={task.id} status={status} task={task} />
+                    ))}
+                </SortableContext>
+            </CardBody>
+            <CardFooter className="p-2">
+                {insertState ? (
+                    <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
+                ) : (
+                    <CustomButton className="w-full relative z-30 mt-4" variant="ghost" size="sm" onClick={(e) => {
+                        e.preventDefault()
+                        setInsertState(true)
+                    }}>+ Add New Task</CustomButton>
+                )}
+            </CardFooter>
+        </Card>
 
-            </div>
-            <SortableContext items={tasksList.map((task) => task.id)}>
-                {tasksList.map((task) => (
-                    <TaskCard key={task.id} status={status} task={task} />
-                ))}
-            </SortableContext>
-            {insertState ? (
-                <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
-            ) : (
-                <CustomButton className="w-full relative z-30 mt-4" variant="ghost" size="sm" onClick={(e) => {
-                    e.preventDefault()
-                    setInsertState(true)
-                }}>+ Add New Task</CustomButton>
-            )}
-        </div>
     )
 }
 
+
+{/* <div key={status.id}
+    style={style}
+    ref={setNodeRef}
+    className={`w-72 border border-gray-300 rounded-lg p-4 flex-shrink-0 h-auto bg-background dark:bg-background-dark ${variants({
+        dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+    })}`}
+>
+    <div className={`flex justify-between ${!notShowActionHeaders && 'cursor-pointer'}`}>
+        <div className="flex-1 flex flex-row justify-between align-middle items-center pr-2"
+            {...attributes}
+            {...listeners}>
+
+            <h2 className="text-lg font-semibold flex-grow ">{status.name}</h2>
+            <Move className={`${notShowActionHeaders ? 'hidden' : 'visible'}`} />
+        </div>
+        {!notShowActionHeaders && (
+            <ContextMenu items={menuItems as ContextMenuItem[]}>
+                <CustomButton><EllipsisVertical /></CustomButton>
+            </ContextMenu>
+        )}
+
+    </div>
+    <SortableContext items={tasksList.map((task) => task.id)}>
+        {tasksList.map((task) => (
+            <TaskCard key={task.id} status={status} task={task} />
+        ))}
+    </SortableContext>
+    {insertState ? (
+        <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
+    ) : (
+        <CustomButton className="w-full relative z-30 mt-4" variant="ghost" size="sm" onClick={(e) => {
+            e.preventDefault()
+            setInsertState(true)
+        }}>+ Add New Task</CustomButton>
+    )}
+</div> */}
 

@@ -71,14 +71,17 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
         })}`}
             ref={setNodeRef}
             style={{ ...style, backgroundColor: status.color ?? '#fff', color: getContrastColor(status.color ?? "#fff") }}>
-            <div className="flex-grow"
+            <div className="flex-grow mr-1"
                 {...listeners}
                 {...attributes}>
-                <p className="text-md mb-2">{task.title}</p>
-                <p className="text-sm">{task.description}</p>
+                <p className="text-md mb-2 font-bold">{task.title}</p>
+                <p className="text-sm font-light">{task.description}</p>
             </div>
-            <CustomButton variant="ghost" size="sm" onClick={() => { }}><Pencil className="w-4 h-4 z-30" /></CustomButton>
-            <CustomButton variant="ghost-destructive" size="sm" onClick={(e) => handleDeleteTask(e)}><Trash2 className="w-4 h-4 z-30" /></CustomButton>
+            <div className="flex flex-col justify-evenly items-stretch gap-y-2">
+
+                <CustomButton variant="primary" size="sm" onClick={() => { }}><Pencil className="w-4 h-4 z-30" /></CustomButton>
+                <CustomButton variant="destructive" size="sm" onClick={(e) => handleDeleteTask(e)}><Trash2 className="w-4 h-4 z-30" /></CustomButton>
+            </div>
 
         </div>
     )
