@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import CustomInput from "../ui/input";
 import CustomButton from "../ui/button";
 import { BotMessageSquare, X } from "lucide-react";
-import { mockTaskResponse } from "@/lib/ai";
 
 
 type AIAgentPopupProps<T> = {
@@ -30,7 +29,7 @@ export function AIAgentPopup<T>(
 
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [response, setResponse] = useState<T | null>(mockTaskResponse as T);
+    const [response, setResponse] = useState<T | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [showPreview, setShowPreview] = useState(true);
@@ -52,12 +51,10 @@ export function AIAgentPopup<T>(
             if (!res.ok) throw new Error("Failed to get response")
 
             const data = await res.json()
-            console.log("[AI Response]", data)
 
             setResponse(data)
             setShowPreview(true)
         } catch (error) {
-            console.error("Error:", error)
             setResponse(null)
             setShowPreview(true)
         } finally {
@@ -66,8 +63,6 @@ export function AIAgentPopup<T>(
     }
 
     const handleAccept = (data?: T) => {
-        // Handle accept action - could save to state, send to backend, etc.
-        console.log("[v0] Accepted response:", data)
 
         setShowPreview(false)
         setInput("")
@@ -76,7 +71,6 @@ export function AIAgentPopup<T>(
 
     const handleReject = () => {
         // Handle reject action
-        console.log("[v0] Rejected response")
         setShowPreview(false)
         setResponse(null)
     }

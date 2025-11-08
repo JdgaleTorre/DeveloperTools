@@ -138,7 +138,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         <Card key={status.id}
             style={style}
             ref={setNodeRef}
-            className={`w-72 p-4 flex-shrink-0 h-auto ${variants({
+            className={`w-96 p-4 flex-shrink-0 h-auto ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
             })}`}>
             <CardHeader className="flex flex-row  justify-between p-2">
