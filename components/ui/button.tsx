@@ -11,7 +11,7 @@ const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
         const baseStyles =
             `flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none 
             focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 cursor-pointer transition-all duration-200
-            hover:shadow-md hover:scale-[1.02]`
+            `
 
         const variants = {
             primary: "bg-primary text-primary-foreground hover:bg-primary/90",
