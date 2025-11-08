@@ -416,6 +416,7 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                 {/* <AIChatPopup /> */}
                 <AIAgentPopup<AITaskResponse>
                     label="Create Tasks with AI Agent"
+                    labelPreview="Suggested Tasks"
                     placeholder="Describe the tasks or project"
                     apiEndPoint={API_TASK_CREATE_ENDPOINT}
                     responseHandler={(data, onAccept, onReject) => (

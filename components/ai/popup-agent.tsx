@@ -7,45 +7,21 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import CustomInput from "../ui/input";
 import CustomButton from "../ui/button";
-import { Bot, BotMessageSquare, Send, User, X } from "lucide-react";
+import { BotMessageSquare } from "lucide-react";
 
 
 type AIAgentPopupProps<T> = {
     label: string
+    labelPreview: string
     placeholder: string
     apiEndPoint: string
     responseHandler: (data: T, onAccept: () => void, onReject: () => void) => React.ReactNode
 }
 
-const mockTaskResponse = {
-    tasks: [
-        {
-            title: "Define project goals",
-            description: "Clarify the objectives and deliverables for the new project."
-        },
-        {
-            title: "Create project roadmap",
-            description: "Break down the project into milestones and assign timelines."
-        },
-        {
-            title: "Set up development environment",
-            description: "Install necessary tools, libraries, and configure the workspace."
-        },
-        {
-            title: "Implement core features",
-            description: "Start coding the main functionalities as per the specifications."
-        },
-        {
-            title: "Testing and QA",
-            description: "Write tests, perform manual QA, and ensure everything works as expected."
-        }
-    ]
-};
-
-
 export function AIAgentPopup<T>(
     {
         label,
+        labelPreview,
         placeholder,
         apiEndPoint,
         responseHandler
@@ -53,8 +29,7 @@ export function AIAgentPopup<T>(
 
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [responseContent, setResponseContent] = useState<React.ReactNode | null>(null);
-    const [response, setResponse] = useState<T | null>(mockTaskResponse as T);
+    const [response, setResponse] = useState<T | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [showPreview, setShowPreview] = useState(true);
@@ -82,7 +57,6 @@ export function AIAgentPopup<T>(
             setShowPreview(true)
         } catch (error) {
             console.error("Error:", error)
-            setResponseContent("Sorry, I encountered an error. Please try again.")
             setResponse(null)
             setShowPreview(true)
         } finally {
@@ -174,7 +148,7 @@ export function AIAgentPopup<T>(
                         <div className="space-y-4 border border-border bg-card p-6 overflow-y-auto
                         scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
                             <div className="space-y-2">
-                                <h3 className="text-lg font-semibold text-foreground">Response Preview</h3>
+                                <h3 className="text-lg font-semibold text-foreground">{labelPreview}</h3>
                                 <div className="rounded-md bg-muted p-4">
                                     <div className="text-sm leading-relaxed text-foreground">{
                                         responseHandler(
