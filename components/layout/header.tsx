@@ -1,55 +1,81 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { ThemeToggle } from "../ui/theme-toggle";
+import { Brain, Menu, X } from "lucide-react";
+import Button from "../ui/button";
+import { Session } from "next-auth";
 
-export default function Header({ sideBarFunc }: { sideBarFunc: () => void }) {
+export default function Header({ sideBarFunc, isAuthenticated, session, isSidebarOpen }:
+    { sideBarFunc: () => void, isAuthenticated: boolean, session?: Session, isSidebarOpen?: boolean }) {
 
-    return (
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-surface px-6 dark:bg-surface-dark">
-            <div className="flex items-center gap-4">
-                <button
-                    onClick={sideBarFunc}
-                    className="rounded-lg p-2 hover:bg-accent"
-                    aria-label="Toggle sidebar"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <line x1="3" x2="21" y1="6" y2="6" />
-                        <line x1="3" x2="21" y1="12" y2="12" />
-                        <line x1="3" x2="21" y1="18" y2="18" />
-                    </svg>
-                </button>
-                <h1 className="text-xl font-bold text-foreground">Developer Tools</h1>
+    function getInitials(fullName: string) {
+        const parts = fullName.trim().split(/\s+/);
+        if (parts.length === 1) {
+            // Only one name → return first two letters
+            return parts[0].substring(0, 2).toUpperCase();
+        }
+
+        // More than one → first letter of first two words
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    if (!isAuthenticated) {
+        return (
+            <header className="border-b bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                            <Brain className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-foreground">DevTools.AI</span>
+                    </div>
+                    <nav className="flex items-center gap-2">
+                        <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors px-3">Features</a>
+                        <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors px-3">How it Works</a>
+                        <ThemeToggle />
+                        <Button
+                            variant="ghost"
+                            onClick={() => signIn()}
+                        >
+                            Sign In
+                        </Button>
+                    </nav>
+                </div>
+            </header>
+        )
+    }
+
+
+
+    return (<header className="bg-card border-b px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+            <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => sideBarFunc()}
+                className="lg:hidden"
+            >
+                {isSidebarOpen ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
+            </Button>
+            <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                    <Brain className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-foreground cursor-pointer" onClick={() => { }}>
+                    DevTools.AI
+                </span>
             </div>
-            <div className="flex items-center gap-4">
-                <ThemeToggle />
-                <button className="rounded-lg p-2 hover:bg-accent" aria-label="Settings" onClick={() => signOut()}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-                </button>
+        </div>
+        <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button variant="ghost" onClick={() => signOut()}>
+                Sign Out
+            </Button>
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-sm">
+                {getInitials(session?.user.name ?? "")}
             </div>
-        </header>
-    )
+        </div>
+    </header >)
+
 }

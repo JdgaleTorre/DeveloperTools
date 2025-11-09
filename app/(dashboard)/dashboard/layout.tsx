@@ -39,7 +39,7 @@ export default async function DashBoardLayout({ children }: Readonly<{ children:
                     <TRPCProvider>
                         <HydrateClient>
                             <AuthProvider>
-                                <ProtectedLayout>
+                                <ProtectedLayout session={session}>
                                     {children}
                                 </ProtectedLayout>
                             </AuthProvider>
