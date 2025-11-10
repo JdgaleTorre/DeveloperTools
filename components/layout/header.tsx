@@ -31,8 +31,8 @@ export default function Header({ sideBarFunc, isAuthenticated, session, isSideba
                         <span className="text-foreground">DevTools.AI</span>
                     </div>
                     <nav className="flex items-center gap-2">
-                        <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors px-3">Features</a>
-                        <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors px-3">How it Works</a>
+                        {/* <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors px-3">Features</a>
+                        <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors px-3">How it Works</a> */}
                         <ThemeToggle />
                         <Button
                             variant="ghost"

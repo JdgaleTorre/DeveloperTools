@@ -34,21 +34,9 @@ export default function Home() {
                                 className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
                                 onClick={() => router.push('dashboard')}
                             >
-                                Try it Now - Free
+                                Try it Now
                             </Button>
-                            <Button size="lg" variant="outline">
-                                Watch Demo
-                            </Button>
-                        </div>
-                        <div className="mt-8 flex items-center gap-8 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-accent rounded-full"></div>
-                                No credit card required
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-accent rounded-full"></div>
-                                Free forever plan
-                            </div>
+
                         </div>
                     </div>
                     <div className="relative">
@@ -173,22 +161,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="bg-gradient-to-br from-blue-600 to-indigo-600 py-20">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-white mb-6">Ready to transform how you manage projects?</h2>
-                    <p className="text-blue-100 text-lg mb-8">
-                        Join thousands of teams using AI to plan smarter and ship faster.
-                    </p>
-                    <Button
-                        size="lg"
-                        className="bg-white text-blue-600 hover:bg-blue-50"
-                        onClick={() => router.push('dashboard')}
-                    >
-                        Get Started Free
-                    </Button>
-                </div>
-            </section>
+
 
             {/* Footer */}
             <footer className="bg-slate-900 dark:bg-slate-950 text-slate-400 py-12">
@@ -209,7 +182,7 @@ export default function Home() {
                             <h4 className="text-white mb-4">Product</h4>
                             <ul className="space-y-2 text-sm">
                                 <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                                {/* <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li> */}
                                 <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
                             </ul>
                         </div>
@@ -217,8 +190,8 @@ export default function Home() {
                             <h4 className="text-white mb-4">Company</h4>
                             <ul className="space-y-2 text-sm">
                                 <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                                {/* <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li> */}
                             </ul>
                         </div>
                         <div>
