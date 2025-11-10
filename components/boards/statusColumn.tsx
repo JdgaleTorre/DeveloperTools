@@ -166,7 +166,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                     ))}
                 </SortableContext>
             </CardBody>
-            <CardFooter>
+            <CardFooter className="mb-0 pb-0">
                 {insertState ? (
                     <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
                 ) : (
