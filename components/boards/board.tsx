@@ -80,8 +80,8 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
             <h1 className="text-2xl font-bold text-left">Board {board?.name}</h1>
             <p className="mt-2 text-left">Description: {board?.description}</p>
 
-            <div className="my-6 py-4  flex wrap-normal gap-4 items-start overflow-x-auto overflow-y-hidden scroll-mx-5 
-            scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent rounded-xl">
+            <div className="mt-4 pt-2  flex wrap-normal gap-4 items-start overflow-x-auto overflow-y-hidden h-full  
+            scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-muted hover:scrollbar-thumb-accent rounded-xl">
                 <DndContext
                     accessibility={{ announcements }}
                     sensors={sensors}
@@ -119,10 +119,9 @@ export default function BoardComponent({ boardId }: { boardId: string }) {
                     </DragOverlay>
                 </DndContext>
                 <AIAgentPopup<AITaskResponse>
-                    label="Create Tasks with AI Agent"
-                    labelPreview="Suggested Tasks"
-                    placeholder="Describe the tasks or project"
+                    firstMessage="Hi! I'm your AI project assistant. Describe your project or idea, and I'll break it down into actionable tasks for your Kanban board. 🚀"
                     apiEndPoint={API_TASK_CREATE_ENDPOINT}
+                    responseMessage={(data) => `I've generated ${data.tasks.length} tasks for your project. Review them below and select which ones you'd like to add to your board.`}
                     responseHandler={(data, onAccept, onReject) => (
                         <TaskList
                             data={data}
