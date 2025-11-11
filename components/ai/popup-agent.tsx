@@ -5,13 +5,11 @@ import type React from "react"
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import CustomInput from "../ui/input";
-import CustomButton from "../ui/button";
-import { BotMessageSquare, Loader2, Send, Sparkles, X } from "lucide-react";
+
+import { Loader2, Send, Sparkles, X } from "lucide-react";
 import Button from "../ui/button";
 import { Card } from "../ui/card";
 import { Textarea } from "../ui/textarea";
-import { mockTaskResponse } from "@/lib/ai";
 
 
 type AIAgentPopupProps<T> = {
@@ -31,8 +29,8 @@ export function AIAgentPopup<T>(
     }: AIAgentPopupProps<T>) {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [response, setResponse] = useState<T | null>(mockTaskResponse as T);
-    const [showPreview, setShowPreview] = useState(true);
+    const [response, setResponse] = useState<T | null>();
+    const [showPreview, setShowPreview] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [chatHistory, setChatHistory] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);

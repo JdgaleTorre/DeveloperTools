@@ -158,7 +158,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                     </ContextMenu>
                 )}
             </CardHeader>
-            <CardBody className="p-2 max-h-[500px] overflow-y-auto scrollbar-thin 
+            <CardBody className="p-2 max-h-[500px] overflow-y-auto scrollbar-thin  mb-0
             scrollbar-thumb-gray-500 scrollbar-track-muted hover:scrollbar-thumb-accent rounded-xl">
                 <SortableContext items={tasksList.map((task) => task.id)}>
                     {tasksList.map((task) => (
@@ -166,11 +166,11 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                     ))}
                 </SortableContext>
             </CardBody>
-            <CardFooter className="mb-0 pb-0">
+            <CardFooter className="mb-0 pb-0 mt-0 pt-0">
                 {insertState ? (
                     <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
                 ) : (
-                    <CustomButton className="w-full relative z-30 mt-2" variant="ghost" size="sm" onClick={(e) => {
+                    <CustomButton className="w-full relative z-30" variant="ghost" size="sm" onClick={(e) => {
                         e.preventDefault()
                         setInsertState(true)
                     }}>+ Add New Task</CustomButton>
