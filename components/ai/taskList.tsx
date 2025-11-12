@@ -3,6 +3,7 @@ import { useState } from "react"
 import CustomInput from "../ui/input"
 import CustomButton from "../ui/button"
 import { Check, X } from "lucide-react"
+import { Card } from "../ui/card"
 
 type Task = {
     title: string
@@ -29,9 +30,10 @@ export function TaskList({ data, onAccept, onReject }: TaskListProps) {
 
     return (
         <div>
-            <ul className="list-disc pl-5 space-y-2 mb-4">
-                {tasks.map((t, i) => (
-                    <li key={i} className="flex items-center gap-2">
+            <h3>Generated Tasks:</h3>
+            {tasks.map((t, i) => (
+                <Card key={i} className="p-4 m-2 border-slate-200">
+                    <div className="flex items-start gap-3">
                         <CustomInput
                             type="checkbox"
                             checked={t.selected}
@@ -39,15 +41,15 @@ export function TaskList({ data, onAccept, onReject }: TaskListProps) {
                             inputSize={"xs"}
                             className="flex-shrink-1 w-auto"
                         />
-                        <div className="flex-grow">
-                            <p className="font-medium">{t.title}</p>
-                            {t.description && (
-                                <p className="text-sm text-muted-foreground">{t.description}</p>
-                            )}
+                        <div className="flex-1">
+                            <h4 className=" mb-1">{t.title}</h4>
+                            <p className=" text-sm mb-2">{t.description}</p>
+
                         </div>
-                    </li>
-                ))}
-            </ul>
+                    </div>
+                </Card>
+            ))}
+
             <div className="flex gap-3">
                 <CustomButton variant="primary" onClick={() =>
                     onAccept(tasks.filter((t) => t.selected))
@@ -55,9 +57,9 @@ export function TaskList({ data, onAccept, onReject }: TaskListProps) {
                     disabled={tasks.filter((t) => t.selected).length === 0}
                     className="flex-1">
                     <Check />
-                    Accept
+                    Add {tasks.filter(t => t.selected).length} Tasks to Board
                 </CustomButton>
-                <CustomButton variant="destructive" onClick={onReject} className="flex-1">
+                <CustomButton variant="destructive" onClick={onReject} >
                     <X />
                     Reject
                 </CustomButton>

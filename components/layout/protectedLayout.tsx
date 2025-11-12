@@ -2,21 +2,30 @@
 import Header from "./header";
 import { useState } from "react";
 import Sidebar from "./sidebar";
+import { Session } from "next-auth";
 
-export default function ProtectedLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+export default function ProtectedLayout({ children, session }: Readonly<{ children: React.ReactNode; session: Session }>) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
     return (<div className="flex min-h-screen flex-col">
         {/* Header */}
         <Header sideBarFunc={() => {
             setIsSidebarOpen((prev) => !prev)
-        }} />
+        }}
+            isAuthenticated
+            session={session}
+            isSidebarOpen={isSidebarOpen} />
 
         <div className="flex flex-1">
             <Sidebar isSidebarOpen={isSidebarOpen} />
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto bg-muted/30 p-8">{children}</main>
+            <main className="flex-1 overflow-auto bg-muted/30 lg:p-4 p-2">
+                <div className="">
+
+                    {children}
+                </div>
+            </main>
         </div>
 
         {/* Footer */}

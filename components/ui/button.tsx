@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 
 export interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive" | "ghost-destructive"
-    size?: "sm" | "md" | "lg"
+    size?: "xs" | "sm" | "md" | "lg"
 }
 
 const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
@@ -23,6 +23,7 @@ const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
         }
 
         const sizes = {
+            xs: "h-6 px-1 text-xs rounded-sm",
             sm: "h-9 px-3 text-sm",
             md: "h-10 px-4 py-2",
             lg: "h-12 px-6 text-lg",

@@ -1,32 +1,190 @@
 "use client";
-import CustomButton from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Brain, Kanban, Sparkles, Zap, Lock, Users } from "lucide-react";
+import Button from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Header from "@/components/layout/header";
 import { signIn } from "next-auth/react";
 
 export default function Home() {
     const router = useRouter();
 
     return (
-        <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-                <h1 className="text-4xl font-bold text-center sm:text-left">
-                    Welcome to Developer Tools!
-                </h1>
-                <p className="text-lg text-gray-600 max-w-xl text-center sm:text-left">
-                    This is a collection of tools to help developers be more productive.
-                    More tools coming soon!
-                </p>
+        <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-emerald-50 to-teal-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+            {/* Header */}
+            <Header sideBarFunc={() => { }} isAuthenticated={false} />
 
-                <div className="flex flex-col gap-[16px]">
-                    <CustomButton onClick={() => signIn()} variant="primary">Sign In</CustomButton>
+            {/* Hero Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                    <div className="col-span-2 text-center items-center justify-center">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full mb-6">
+                            <Sparkles className="w-4 h-4" />
+                            <span className="text-sm">AI-Powered Project Management</span>
+                        </div>
+                        <h1 className="text-foreground mb-6">
+                            Transform Ideas into <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Actionable Tasks</span> with AI
+                        </h1>
+                        <p className="text-muted-foreground mb-8 text-lg">
+                            DevTools combines intelligent task generation with powerful Kanban boards.
+                            Describe your project in plain English and watch as AI creates a structured workflow in seconds.
+                        </p>
+                        <div className="flex flex-wrap gap-4 justify-center">
+                            <Button
+                                size="lg"
+                                className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                                onClick={() => signIn()}
+                            >
+                                Try it Now
+                            </Button>
+
+                        </div>
+                    </div>
+                    {/* <div className="relative">
+                        <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-2xl"></div>
+
+                    </div> */}
                 </div>
+            </section>
+
+            {/* Features Section */}
+            <section id="features" className="bg-background py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-foreground mb-4">Everything you need to manage projects smarter</h2>
+                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                            Powered by AI, designed for teams. DevTools.AI brings intelligence to every step of your workflow.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                                <Brain className="w-6 h-6 text-primary" />
+                            </div>
+                            <h3 className="text-foreground mb-2">AI Task Generation</h3>
+                            <p className="text-muted-foreground">
+                                Describe your project in natural language. Our AI generates structured tasks with titles, descriptions, and priorities instantly.
+                            </p>
+                        </Card>
+
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                                <Kanban className="w-6 h-6 text-accent" />
+                            </div>
+                            <h3 className="text-foreground mb-2">Kanban Boards</h3>
+                            <p className="text-muted-foreground">
+                                Drag-and-drop task management with customizable columns. Move tasks between statuses with smooth, intuitive interactions.
+                            </p>
+                        </Card>
+
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                                <Sparkles className="w-6 h-6 text-primary" />
+                            </div>
+                            <h3 className="text-foreground mb-2">Custom Workflows</h3>
+                            <p className="text-muted-foreground">
+                                Create custom status columns with color coding. Design workflows that match your team's unique process.
+                            </p>
+                        </Card>
+
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                                <Zap className="w-6 h-6 text-accent" />
+                            </div>
+                            <h3 className="text-foreground mb-2">Real-Time Updates</h3>
+                            <p className="text-muted-foreground">
+                                Changes sync instantly across your team. See updates as they happen with optimistic UI for lightning-fast interactions.
+                            </p>
+                        </Card>
+
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                                <Lock className="w-6 h-6 text-primary" />
+                            </div>
+                            <h3 className="text-foreground mb-2">Secure Authentication</h3>
+                            <p className="text-muted-foreground">
+                                Sign in securely with GitHub OAuth. Your data is protected with enterprise-grade security.
+                            </p>
+                        </Card>
+
+                        <Card className="p-6 hover:border-primary transition-colors">
+                            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                                <Users className="w-6 h-6 text-accent" />
+                            </div>
+                            <h3 className="text-foreground mb-2">Team Collaboration</h3>
+                            <p className="text-muted-foreground">
+                                Share boards with your team. Collaborate in real-time with comments, assignments, and notifications.
+                            </p>
+                        </Card>
+                    </div>
+                </div>
+            </section>
+
+            {/* How It Works */}
+            <section id="how-it-works" className="py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-foreground mb-4">From idea to execution in three simple steps</h2>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white">
+                                1
+                            </div>
+                            <h3 className="text-foreground mb-2">Describe Your Project</h3>
+                            <p className="text-muted-foreground">
+                                Open the AI chat and describe what you want to build. Be as detailed or as brief as you like.
+                            </p>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white">
+                                2
+                            </div>
+                            <h3 className="text-foreground mb-2">Review AI Suggestions</h3>
+                            <p className="text-muted-foreground">
+                                AI generates a complete task breakdown. Accept, edit, or regenerate tasks until they're perfect.
+                            </p>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white">
+                                3
+                            </div>
+                            <h3 className="text-foreground mb-2">Start Building</h3>
+                            <p className="text-muted-foreground">
+                                Tasks appear on your Kanban board. Drag, drop, and track progress as your team brings the project to life.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
 
 
+            {/* Footer */}
+            <footer className="bg-slate-900 dark:bg-slate-950 text-slate-400 py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid md:grid-cols-4 gap-8">
+                        <div>
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                                    <Brain className="w-5 h-5 text-white" />
+                                </div>
+                                <span className="text-white">DevTools</span>
+                            </div>
+                            <p className="text-sm">
+                                AI-powered project management for modern teams.
+                            </p>
+                        </div>
 
-            </main>
-            <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-                <span className="text-sm text-gray-500">© 2025 Jose Gale</span>
+                    </div>
+                    <div className="border-t border-slate-800 dark:border-slate-900 mt-8 pt-8 text-sm text-center">
+                        © 2025 DevTools. All rights reserved.
+                    </div>
+                </div>
             </footer>
         </div>
     );

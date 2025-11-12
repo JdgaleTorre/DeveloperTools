@@ -3,49 +3,61 @@
 import type React from "react"
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import CustomInput from "../ui/input";
-import CustomButton from "../ui/button";
-import { BotMessageSquare, X } from "lucide-react";
+
+import { Loader2, Send, Sparkles, X } from "lucide-react";
+import Button from "../ui/button";
+import { Card } from "../ui/card";
+import { Textarea } from "../ui/textarea";
 
 
 type AIAgentPopupProps<T> = {
-    label: string
-    labelPreview: string
-    placeholder: string
-    apiEndPoint: string
-    responseHandler: (data: T, onAccept: () => void, onReject: () => void) => React.ReactNode
+    apiEndPoint: string,
+    responseHandler: (data: T, onAccept: () => void, onReject: () => void) => React.ReactNode,
+    firstMessage: string,
+    responseMessage: (data: T) => string;
 }
 
 export function AIAgentPopup<T>(
     {
-        label,
-        labelPreview,
-        placeholder,
         apiEndPoint,
-        responseHandler
+        responseHandler,
+        firstMessage,
+        responseMessage,
+
     }: AIAgentPopupProps<T>) {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [input, setInput] = useState("");
-    const [response, setResponse] = useState<T | null>(null);
+    const [response, setResponse] = useState<T | null>();
+    const [showPreview, setShowPreview] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [showPreview, setShowPreview] = useState(true);
+    const [chatHistory, setChatHistory] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
+    const [prompt, setPrompt] = useState('');
+
+    useEffect(() => {
+        setChatHistory([
+            {
+                role: 'assistant',
+                content: firstMessage
+            }
+        ])
+    }, [firstMessage])
 
 
     const handleSendMessage = async () => {
-        if (!input.trim() || isLoading) return
+        if (!prompt.trim() || isLoading) return
 
-        setIsLoading(true)
-        setShowPreview(false)
+        setIsLoading(true);
+        setShowPreview(false);
+        setChatHistory(prev => [...prev, { role: 'user', content: prompt }]);
 
         try {
             const res = await fetch(apiEndPoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: input }),
+                body: JSON.stringify({ message: prompt }),
             })
 
             if (!res.ok) throw new Error("Failed to get response")
@@ -53,6 +65,11 @@ export function AIAgentPopup<T>(
             const data = await res.json()
 
             setResponse(data)
+
+            setChatHistory(prev => [...prev, {
+                role: 'assistant',
+                content: responseMessage(data)
+            }]);
             setShowPreview(true)
         } catch (error) {
             setResponse(null)
@@ -65,7 +82,7 @@ export function AIAgentPopup<T>(
     const handleAccept = (data?: T) => {
 
         setShowPreview(false)
-        setInput("")
+        setPrompt("")
         setResponse(null)
     }
 
@@ -75,73 +92,115 @@ export function AIAgentPopup<T>(
         setResponse(null)
     }
 
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
+
     return (
         <>
-            <button
+            <Button
+                size="lg"
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "fixed bottom-14 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all hover:scale-110",
-                    isOpen ? "bg-destructive" : "bg-primary",
+                    "fixed bottom-14 right-6 z-50 px-6 bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg shadow-primary/50",
                 )}
-                aria-label={isOpen ? "Close chat" : "Open chat"}
             >
-                {isOpen ? (
-                    <X />
-                ) : (
-                    <BotMessageSquare className="text-white" />
-                )}
-            </button>
+
+                <Sparkles className="w-5 h-5 mr-2" />
+                AI Agent
+
+            </Button>
 
             {isOpen && (
-                <div className="fixed bottom-32 right-6 z-40 flex h-[500px] w-[380px] flex-col rounded-lg border border-border bg-card dark:bg-card-dark shadow-2xl">
-                    <div className="space-y-2 p-4">
-                        <label htmlFor="ai-input" className="text-sm font-medium text-foreground">
-                            {label}
-                        </label>
-                        <div className="flex gap-2">
-                            <CustomInput
-                                // id="ai-input"
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                                placeholder={placeholder}
-                                disabled={isLoading} />
-
-                            <CustomButton onClick={handleSendMessage} disabled={isLoading || !input.trim()}>
-                                {isLoading ? "Generating..." : "Send"}
-                            </CustomButton>
-                        </div>
-                    </div>
-
-                    {/* Loading State */}
-                    {isLoading && (
-                        <div className="rounded-lg border border-border bg-card dark:bg-card-dark p-6">
-                            <div className="flex items-center gap-3">
-                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                                <p className="text-sm text-muted-foreground">AI is thinking...</p>
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <Card className="w-full max-w-3xl h-[600px] flex flex-col bg-card shadow-2xl">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                                    <Sparkles className="w-5 h-5 text-white" />
+                                </div>
+                                <h2 className="text-foreground">AI Project Assistant</h2>
                             </div>
+                            <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
+                                <X className="w-5 h-5" />
+                            </Button>
                         </div>
-                    )}
 
-                    {/* Preview Section */}
-                    {showPreview && !isLoading && response && (
-                        <div className="space-y-4 border border-border bg-card dark:bg-card-dark p-2 overflow-y-auto
-                        scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-background dark:scrollbar-track-background-dark hover:scrollbar-thumb-accent">
-                            <div className="space-y-2">
-                                <h3 className="text-lg font-semibold text-foreground">{labelPreview}</h3>
-                                <div className="rounded-md bg-muted p-4">
-                                    <div className="text-sm leading-relaxed text-foreground">{
-                                        responseHandler(
-                                            response,
-                                            () => handleAccept(response),
-                                            handleReject
-                                        )}
+                        {/* Chat history */}
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                            {chatHistory.map((message, index) => (
+                                <div
+                                    key={index}
+                                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                >
+                                    <div
+                                        className={`max-w-[80%] px-4 py-2 rounded-lg ${message.role === 'user'
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'bg-muted text-foreground'
+                                            }`}
+                                    >
+                                        {message.content}
                                     </div>
                                 </div>
-                            </div>
+                            ))}
+
+                            {isLoading && (
+                                <div className="flex justify-start">
+                                    <div className="bg-slate-100 text-slate-900 px-4 py-2 rounded-lg flex items-center gap-2">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Generating tasks...
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Preview */}
+                            {showPreview && !isLoading && response && (
+
+                                <div className="text-sm leading-relaxed text-foreground">{
+                                    responseHandler(
+                                        response,
+                                        () => handleAccept(response),
+                                        handleReject
+                                    )}
+                                </div>
+
+                            )}
                         </div>
-                    )}
+
+                        {/* Input area */}
+                        <div className="p-4 border-t border-slate-200">
+                            <div className="flex gap-2">
+                                <Textarea
+                                    value={prompt}
+                                    onChange={(e) => setPrompt(e.target.value)}
+                                    onKeyDown={handleKeyPress}
+                                    placeholder="Describe your project... (e.g., 'Build a recipe sharing app with user profiles and favorites')"
+                                    className="resize-none"
+                                    rows={3}
+                                    disabled={isLoading}
+                                />
+                                <Button
+                                    onClick={handleSendMessage}
+                                    disabled={!prompt.trim() || isLoading}
+                                    size="sm"
+                                    className="h-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                                >
+                                    {isLoading ? (
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                    ) : (
+                                        <Send className="w-5 h-5" />
+                                    )}
+                                </Button>
+                            </div>
+                            <p className="text-xs text-slate-500 mt-2">
+                                Press Enter to send, Shift+Enter for new line
+                            </p>
+                        </div>
+                    </Card>
                 </div>
 
 

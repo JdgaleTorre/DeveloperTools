@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { type InputHTMLAttributes, forwardRef } from "react"
 
 export interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
-    variant?: "default" | "outline" | "filled"
+    variant?: "default" | "outline" | "filled" | "ghost"
     inputSize?: "xs" | "sm" | "md" | "lg"
     error?: boolean
     label?: string
@@ -30,7 +30,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         variant === "default" && [
                             "border border-input bg-surface dark:bg-surface-dark text-foreground",
                             "placeholder:text-muted-foreground",
-                            "focus:ring-ring focus:ring-gray-500",
+                            "focus:ring-ring",
                         ],
                         variant === "outline" && [
                             "border-2 border-border bg-transparent text-foreground",
@@ -41,6 +41,12 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                             "border-0 bg-muted text-foreground",
                             "placeholder:text-muted-foreground",
                             "focus:bg-surface dark:bg-surface-dark focus:ring-ring",
+                        ],
+                        variant === "ghost" && [
+                            "border-0 bg-transparent text-foreground",
+                            "placeholder:text-muted-foreground",
+                            "focus:outline-none focus:ring-0 focus:ring-offset-0"
+
                         ],
 
                         // Size styles

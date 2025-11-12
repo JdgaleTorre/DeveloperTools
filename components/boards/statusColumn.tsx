@@ -138,15 +138,18 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
         <Card key={status.id}
             style={style}
             ref={setNodeRef}
-            className={`w-96 p-4 flex-shrink-0 h-auto ${variants({
+            className={`min-w-96 mb-2 flex-1 bg-muted rounded-lg p-3 space-y-3 max-h-[650px] transition-colors ${variants({
                 dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
             })}`}>
             <CardHeader className="flex flex-row  justify-between p-2">
-                <div className="flex grow justify-between items-center cursor-grab"
+                <div className="flex grow items-center cursor-grab"
                     {...attributes}
                     {...listeners}>
-
-                    <CardTitle>{status.name}</CardTitle>
+                    <div
+                        className="w-3 h-3 rounded-full mr-2"
+                        style={{ backgroundColor: status.color ?? '#FFFFFF' }}
+                    />
+                    <CardTitle className="flex-1">{status.name}</CardTitle>
                     <Move className={`${notShowActionHeaders ? 'hidden' : 'visible'}`} />
                 </div>
                 {!notShowActionHeaders && (
@@ -155,22 +158,28 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                     </ContextMenu>
                 )}
             </CardHeader>
-            <CardBody className="p-2">
+            <CardBody className="p-2 max-h-[500px] overflow-y-auto scrollbar-thin  mb-0
+            scrollbar-thumb-gray-500 scrollbar-track-muted hover:scrollbar-thumb-accent rounded-xl">
                 <SortableContext items={tasksList.map((task) => task.id)}>
                     {tasksList.map((task) => (
-                        <TaskCard key={task.id} status={status} task={task} />
+                        <TaskCard key={task.id} status={status} task={task} newTask={task.id === ''} />
                     ))}
                 </SortableContext>
             </CardBody>
-            <CardFooter className="p-2">
-                {insertState ? (
-                    <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
-                ) : (
-                    <CustomButton className="w-full relative z-30 mt-4" variant="ghost" size="sm" onClick={(e) => {
-                        e.preventDefault()
-                        setInsertState(true)
-                    }}>+ Add New Task</CustomButton>
-                )}
+            <CardFooter className="mb-0 pb-0 mt-0 pt-0">
+
+                <CustomButton className="w-full relative z-30" variant="ghost" size="sm" onClick={(e) => {
+                    e.preventDefault()
+
+                    utils.tasks.getBoardTasks.setData({ boardId: tasksList[0].boardId }, (old) => {
+
+                        if (!old) return old;
+
+                        return [...old, { id: '', description: '', createdAt: new Date, boardId: tasksList[0].boardId, statusId: tasksList[0].statusId, title: '', position: tasksList[tasksList.length - 1].position + 1 }]
+                    })
+
+                }}>+ Add New Task</CustomButton>
+
             </CardFooter>
         </Card>
 
