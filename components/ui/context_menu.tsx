@@ -131,7 +131,7 @@ export function ContextMenu({ items, children, className }: ContextMenuProps) {
                                     onClick={() => handleItemClick(item)}
                                     disabled={item.disabled}
                                     className={cn(
-                                        "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-muted",
+                                        "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                                         "hover:bg-accent hover:text-accent-foreground",
                                         "focus:bg-accent focus:text-accent-foreground focus:outline-none",
                                         item.disabled && "cursor-not-allowed opacity-50 hover:bg-transparent",

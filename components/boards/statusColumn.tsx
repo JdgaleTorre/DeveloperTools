@@ -162,7 +162,7 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
             scrollbar-thumb-gray-500 scrollbar-track-muted hover:scrollbar-thumb-accent rounded-xl">
                 <SortableContext items={tasksList.map((task) => task.id)}>
                     {tasksList.map((task) => (
-                        <TaskCard key={task.id} status={status} task={task} />
+                        <TaskCard key={task.id} status={status} task={task} newTask={task.id === ''} />
                     ))}
                 </SortableContext>
             </CardBody>
