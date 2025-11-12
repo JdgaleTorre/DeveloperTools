@@ -25,7 +25,7 @@ export default function Home() {
                             Transform Ideas into <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Actionable Tasks</span> with AI
                         </h1>
                         <p className="text-muted-foreground mb-8 text-lg">
-                            DevTools.AI combines intelligent task generation with powerful Kanban boards.
+                            DevTools combines intelligent task generation with powerful Kanban boards.
                             Describe your project in plain English and watch as AI creates a structured workflow in seconds.
                         </p>
                         <div className="flex flex-wrap gap-4">
@@ -172,7 +172,7 @@ export default function Home() {
                                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
                                     <Brain className="w-5 h-5 text-white" />
                                 </div>
-                                <span className="text-white">DevTools.AI</span>
+                                <span className="text-white">DevTools</span>
                             </div>
                             <p className="text-sm">
                                 AI-powered project management for modern teams.
@@ -204,7 +204,7 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="border-t border-slate-800 dark:border-slate-900 mt-8 pt-8 text-sm text-center">
-                        © 2025 DevTools.AI. All rights reserved.
+                        © 2025 DevTools. All rights reserved.
                     </div>
                 </div>
             </footer>

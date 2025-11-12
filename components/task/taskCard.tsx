@@ -60,8 +60,8 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
     const variants = cva("", {
         variants: {
             dragging: {
-                over: "ring-2 opacity-10",
-                overlay: "ring-2 ring-primary",
+                over: "ring-2 opacity-50",
+                overlay: "ring-2 ring-primary rotate-3",
             },
         },
     });
@@ -72,8 +72,11 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
             {...attributes}
             className={cn(
                 "p-4 cursor-grab active:cursor-grabbing bg-card hover:border-primary transition-all mb-2",
-                isDragging && "opacity-50 rotate-3"
-            )}
+                variants({
+                    dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+                }),
+            )
+            }
         >
             <div className="flex items-start gap-2">
                 <div
@@ -95,31 +98,7 @@ export default function TaskCard({ status, task, isOverlay }: TaskCardProps) {
                     </div>
                 </div>
             </div>
-        </Card>
+        </Card >
     )
 
 }
-
-
-//  < div className = {`my-2 p-2 rounded shadow flex flex-row items-center transform hover:scale-105 duration-100 z-10 
-//              cursor-grab active:cursor-grabbing bg-card hover:border-primary transition-all",
-//              ${variants({
-//             dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-//         })}`
-// }
-// ref = { setNodeRef }
-// style = {{ ...style }}>
-//             <div className="flex-grow mr-1"
-//                 {...listeners}
-//                 {...attributes}>
-//                 <p className="text-md mb-2 font-bold">{task.title}</p>
-//                 <p className="text-sm font-light">{task.description}</p>
-//             </div>
-//             <div className="flex flex-col justify-evenly items-stretch gap-y-2">
-
-//                 <CustomButton variant="primary" size="sm" onClick={() => { }}><Pencil className="w-4 h-4 z-30" /></CustomButton>
-//                 <CustomButton variant="destructive" size="sm" onClick={(e) => handleDeleteTask(e)}><Trash2 className="w-4 h-4 z-30" /></CustomButton>
-//             </div>
-
-//         </div >
-//     )

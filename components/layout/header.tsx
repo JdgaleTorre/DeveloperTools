@@ -63,7 +63,7 @@ export default function Header({ sideBarFunc, isAuthenticated, session, isSideba
                     <Brain className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-foreground cursor-pointer" onClick={() => { }}>
-                    DevTools.AI
+                    DevTools
                 </span>
             </div>
         </div>

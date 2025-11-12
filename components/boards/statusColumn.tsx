@@ -167,14 +167,19 @@ export default function StatusColumn({ status, tasksList, statusLength, isOverla
                 </SortableContext>
             </CardBody>
             <CardFooter className="mb-0 pb-0 mt-0 pt-0">
-                {insertState ? (
-                    <NewTaskCard status={status} board={{ id: status.boardId } as InferSelectModel<typeof boards>} cancelFn={() => setInsertState(false)} />
-                ) : (
-                    <CustomButton className="w-full relative z-30" variant="ghost" size="sm" onClick={(e) => {
-                        e.preventDefault()
-                        setInsertState(true)
-                    }}>+ Add New Task</CustomButton>
-                )}
+
+                <CustomButton className="w-full relative z-30" variant="ghost" size="sm" onClick={(e) => {
+                    e.preventDefault()
+
+                    utils.tasks.getBoardTasks.setData({ boardId: tasksList[0].boardId }, (old) => {
+
+                        if (!old) return old;
+
+                        return [...old, { id: '', description: '', createdAt: new Date, boardId: tasksList[0].boardId, statusId: tasksList[0].statusId, title: '', position: tasksList[tasksList.length - 1].position + 1 }]
+                    })
+
+                }}>+ Add New Task</CustomButton>
+
             </CardFooter>
         </Card>
 
