@@ -4,6 +4,7 @@ import { Brain, Kanban, Sparkles, Zap, Lock, Users } from "lucide-react";
 import Button from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/layout/header";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function Home() {
             {/* Hero Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
+                    <div className="col-span-2 text-center items-center justify-center">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full mb-6">
                             <Sparkles className="w-4 h-4" />
                             <span className="text-sm">AI-Powered Project Management</span>
@@ -28,21 +29,21 @@ export default function Home() {
                             DevTools combines intelligent task generation with powerful Kanban boards.
                             Describe your project in plain English and watch as AI creates a structured workflow in seconds.
                         </p>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-4 justify-center">
                             <Button
                                 size="lg"
                                 className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
-                                onClick={() => router.push('dashboard')}
+                                onClick={() => signIn()}
                             >
                                 Try it Now
                             </Button>
 
                         </div>
                     </div>
-                    <div className="relative">
+                    {/* <div className="relative">
                         <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-2xl"></div>
 
-                    </div>
+                    </div> */}
                 </div>
             </section>
 
@@ -178,30 +179,7 @@ export default function Home() {
                                 AI-powered project management for modern teams.
                             </p>
                         </div>
-                        <div>
-                            <h4 className="text-white mb-4">Product</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                                {/* <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li> */}
-                                <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-white mb-4">Company</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                                {/* <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li> */}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-white mb-4">Legal</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
-                            </ul>
-                        </div>
+
                     </div>
                     <div className="border-t border-slate-800 dark:border-slate-900 mt-8 pt-8 text-sm text-center">
                         © 2025 DevTools. All rights reserved.
